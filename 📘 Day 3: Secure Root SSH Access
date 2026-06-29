@@ -1,0 +1,108 @@
+🧭 Project Overview
+
+In this exercise, we configure SSH access on a Linux server to secure the root user login behavior. This is a critical system hardening practice used in DevOps and production environments to prevent unauthorized or risky direct root access.
+
+Instead of allowing direct root login, administrators enforce controlled access through standard users with elevated privileges.
+
+🎯 Objective
+Secure SSH configuration for root access
+Disable or restrict direct root login via SSH
+Ensure safer administrative access practices
+Reinforce Linux security hardening principles
+🧰 Environment
+Linux server (CentOS / Ubuntu lab environment)
+SSH service (sshd)
+Root or sudo privileges required
+📌 Concept Explanation
+
+By default, SSH may allow root login depending on configuration. However, this is high risk in production environments.
+
+Why direct root SSH is dangerous:
+No accountability (shared root access)
+High risk of brute-force attacks
+Full system compromise if credentials are leaked
+No audit trail per user
+Recommended DevOps approach:
+
+Instead of logging in as root:
+
+SSH → regular user → sudo privileges
+🛠️ Implementation Steps
+1. Open SSH configuration file
+sudo vi /etc/ssh/sshd_config
+2. Locate root login directive
+
+Find:
+
+PermitRootLogin yes
+3. Disable root login
+
+Update it to:
+
+PermitRootLogin no
+🔍 Explanation
+PermitRootLogin no → completely disables root SSH login
+Forces users to log in with a normal account first
+🔐 Alternative (More Flexible Option)
+
+In some environments, root login is allowed but restricted:
+
+PermitRootLogin prohibit-password
+
+This allows root login only via SSH keys (not password authentication).
+
+4. Restart SSH service
+
+After making changes:
+
+CentOS / RHEL
+sudo systemctl restart sshd
+Ubuntu
+sudo systemctl restart ssh
+5. Verify SSH configuration
+
+Check service status:
+
+sudo systemctl status sshd
+
+or
+
+sudo systemctl status ssh
+6. Test SSH behavior
+
+Try logging in as root:
+
+ssh root@server-ip
+
+Expected result:
+
+Permission denied (publickey,password).
+🔐 Security Insight
+
+This configuration enforces:
+
+Principle of least privilege
+Controlled administrative access
+Better auditability through user accounts
+Reduced attack surface on SSH service
+🏗️ Real-World Use Cases
+Scenario	Description
+Production servers	Root login disabled completely
+Cloud environments	AWS EC2 uses key-based sudo users
+Enterprise systems	Centralized access via IAM or LDAP
+DevOps pipelines	Automated access via service accounts
+⚠️ Common Mistakes
+❌ Forgetting to restart SSH after changes
+❌ Locking yourself out by disabling sudo user access
+❌ Editing wrong SSH config file
+❌ Not testing access before closing session
+❌ Using root login in production environments
+📚 Key Takeaways
+Direct root SSH access is a security risk
+SSH configuration is a core DevOps skill
+Standard users with sudo access are preferred
+SSH hardening is part of system security baseline
+Small config changes can significantly improve security posture
+🚀 Summary
+
+In this exercise, we hardened SSH access by disabling direct root login, enforcing safer administrative practices. This is a standard security measure in production environments to protect Linux systems from unauthorized root-level access.
