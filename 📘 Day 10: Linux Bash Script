@@ -1,0 +1,107 @@
+🧭 Project Overview
+
+In this exercise, we focus on writing and executing Bash scripts to automate repetitive tasks in Linux. Bash scripting is one of the most fundamental skills in DevOps, enabling engineers to automate system administration, deployments, monitoring, and maintenance tasks.
+
+This task builds the foundation for automation-first thinking, which is a core principle of DevOps engineering.
+
+🎯 Objective
+Understand Bash scripting basics
+Create and execute a shell script
+Use variables, commands, and logic in scripts
+Improve automation skills in Linux environments
+Reinforce DevOps automation principles
+🧰 Environment
+Linux system (CentOS / Ubuntu lab environment)
+Bash shell (/bin/bash)
+Text editor (vi, nano)
+Execute permissions required
+📌 Concept Explanation
+
+A Bash script is a file containing a sequence of Linux commands executed in order.
+
+Basic structure:
+#!/bin/bash
+
+echo "Hello DevOps"
+Key Components:
+#!/bin/bash → Shebang (defines interpreter)
+echo → prints output
+.sh file extension → script file
+🛠️ Implementation Steps
+1. Create a Bash script file
+vi devops-script.sh
+2. Write the script
+#!/bin/bash
+
+echo "Starting DevOps Automation Script"
+date
+whoami
+uptime
+🔍 Explanation:
+Command	Purpose
+echo	Displays messages
+date	Shows system date/time
+whoami	Displays current user
+uptime	Shows system load
+3. Save and exit file
+
+In vi:
+
+ESC → :wq → ENTER
+4. Give execution permission
+chmod +x devops-script.sh
+5. Execute the script
+./devops-script.sh
+🔍 Expected Output
+Starting DevOps Automation Script
+Mon Jun 29 12:00:00 UTC 2026
+root
+12:00:01 up 10 days, load average: 0.10, 0.05, 0.01
+🔐 Security Insight
+
+Bash scripts are powerful and can:
+
+Modify system files
+Start/stop services
+Delete or create resources
+Automate deployments
+DevOps best practices:
+Always review scripts before execution
+Avoid running unknown scripts as root
+Use least privilege principle
+Store scripts in version control (Git)
+Validate input in production scripts
+🏗️ Real-World Use Cases
+Scenario	Description
+Deployment automation	Deploy applications automatically
+System monitoring	Check CPU, memory, disk usage
+Backup scripts	Automate data backups
+Log cleanup	Remove old log files
+User management	Automate user creation
+⚠️ Common Mistakes
+❌ Forgetting chmod +x
+❌ Missing shebang (#!/bin/bash)
+❌ Using incorrect file paths
+❌ Running scripts without testing
+❌ Hardcoding sensitive values
+📚 Key Takeaways
+Bash scripting is the backbone of Linux automation
+Scripts help eliminate repetitive manual tasks
+Execution permissions are required to run scripts
+DevOps heavily relies on scripting for automation
+Good scripting improves system efficiency and reliability
+🚀 Summary
+
+In this exercise, we created and executed a Bash script to automate system commands in Linux. This introduced core automation principles used in DevOps workflows, enabling repeatable and efficient system administration.
+
+🎉 End of Day 10 (Major Milestone)
+
+At this point, you’ve built:
+
+Linux administration foundation
+Security hardening skills
+Automation with scripts and cron
+Configuration management exposure (Ansible)
+Basic troubleshooting skills
+Application deployment (Tomcat)
+Database troubleshooting (MariaDB)
