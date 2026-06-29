@@ -1,0 +1,84 @@
+🧭 Project Overview
+
+In this exercise, we create a temporary Linux user account that automatically expires after a defined period. This is a common DevOps and system administration practice used to enforce time-bound access control for contractors, interns, or temporary system access.
+
+🎯 Objective
+Create a new Linux user
+Assign an expiry date to the user account
+Verify account expiration settings
+Understand real-world use cases for temporary access control
+🧰 Environment
+Linux OS (CentOS / Ubuntu lab environment)
+SSH access via jump host
+sudo/root privileges required
+📌 Concept Explanation
+
+Linux allows administrators to set an expiration date for user accounts. After this date:
+
+The user account is automatically disabled
+Login attempts will fail
+No manual intervention is required
+
+This is done using:
+
+chage
+
+or during user creation with:
+
+useradd -e
+🛠️ Implementation Steps
+1. Create a user with expiry date
+sudo useradd -e 2026-07-01 john
+🔍 Explanation
+useradd → creates a new user
+-e → sets account expiry date
+2026-07-01 → expiration date (YYYY-MM-DD format)
+john → username
+2. Set password for the user (if required)
+sudo passwd john
+
+In real DevOps environments, passwords are often avoided for temporary automation users.
+
+3. Verify user expiry information
+sudo chage -l john
+🔍 Expected Output
+Last password change                                    : ...
+Password expires                                        : never
+Account expires                                         : Jul 01, 2026
+4. Confirm user entry in system
+cat /etc/passwd | grep john
+
+Example output:
+
+john:x:1003:1003::/home/john:/bin/bash
+
+(Expiry is not shown here but stored in shadow/user metadata)
+
+🔐 Security Insight
+
+Temporary users help enforce:
+
+Least privilege access
+Time-bound access control
+Reduced security risk from forgotten accounts
+Compliance with enterprise security policies
+🏗️ Real-World Use Cases
+Scenario	Description
+Contractors	Access ends after project completion
+Interns	Limited-time system access
+Support engineers	Temporary troubleshooting access
+Migration teams	Short-term infrastructure access
+Security audits	Controlled access windows
+⚠️ Common Mistakes
+❌ Using incorrect date format (MM/DD/YYYY instead of YYYY-MM-DD)
+❌ Forgetting to verify with chage -l
+❌ Confusing password expiry with account expiry
+❌ Not documenting expiry dates in production environments
+📚 Key Takeaways
+Linux supports built-in user expiration policies
+useradd -e simplifies temporary access provisioning
+chage is used for auditing and modifying account aging settings
+Temporary accounts are a key part of security governance in DevOps
+🚀 Summary
+
+In this task, we created a Linux user with a defined expiration date, ensuring that access is automatically revoked after a specified period. This improves system security and aligns with enterprise identity and access management practices.
