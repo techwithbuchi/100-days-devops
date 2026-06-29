@@ -1,0 +1,96 @@
+📘 Day 1: Linux User Setup with Non-Interactive Shell
+🧭 Project Overview
+
+This task focuses on creating and managing a Linux user account with a non-interactive shell, ensuring that the user cannot log in interactively but can still be used for system-level operations such as running scripts or services.
+
+This is a foundational Linux administration skill widely used in DevOps for service accounts, automation users, and security hardening.
+
+🎯 Objective
+Create a new Linux user
+Assign a non-interactive shell
+Verify that the user cannot initiate an interactive login session
+Understand use cases for restricted system users
+🧰 Environment
+Linux distribution: CentOS / Ubuntu (Lab environment)
+Access: SSH via jump host/terminal
+Privileges: sudo/root access required
+📌 Concept Explanation
+
+A non-interactive shell is a shell that does not allow the user to log in and interact with the system.
+
+Common non-interactive shells:
+
+/sbin/nologin
+/usr/sbin/nologin
+/bin/false
+Why this matters in DevOps:
+
+In production systems, not all users are human. Some are:
+
+Application service accounts
+Automation users (CI/CD pipelines)
+Backup agents
+Monitoring tools
+
+These users should exist without login capability for security reasons.
+
+🛠️ Implementation Steps
+1. Create the user with a non-interactive shell
+sudo useradd -s /sbin/nologin john
+🔍 Explanation:
+useradd → creates a new user
+-s → specifies the login shell
+/sbin/nologin → prevents interactive login
+john → username (example)
+2. Set password (optional depending on lab requirement)
+sudo passwd john
+
+In most DevOps environments, service users do NOT require passwords.
+
+3. Verify user shell configuration
+cat /etc/passwd | grep john
+
+Expected output:
+
+john:x:1002:1002::/home/john:/sbin/nologin
+4. Test login restriction
+su - john
+
+Expected result:
+
+This account is currently not available.
+
+or
+
+This account is not available.
+🔐 Security Insight
+
+Using a non-interactive shell ensures:
+
+No SSH access
+No terminal login
+Reduced attack surface
+Controlled automation execution environment
+
+This is a key principle in least privilege access control.
+
+🏗️ Real-World Use Cases
+Use Case	Description
+Web server user	Runs Nginx/Apache processes
+CI/CD user	Jenkins/GitHub runners
+Database service user	MySQL/PostgreSQL service accounts
+Monitoring tools	Prometheus node exporters
+Backup agents	Automated backup systems
+⚠️ Common Mistakes
+❌ Forgetting to set shell during user creation
+❌ Using /bin/bash instead of /sbin/nologin
+❌ Assuming password is required for service users
+❌ Testing login incorrectly using SSH instead of su
+📚 Key Takeaways
+Linux users can be created for services, not just humans
+Non-interactive shells improve system security
+DevOps engineers must understand user lifecycle management
+This is foundational for automation and production-grade systems
+🚀 Summary
+
+In this exercise, we created a restricted Linux user with no login capability, reinforcing the principle of secure system design. This pattern is widely used in production environments to ensure that service accounts cannot be abused for unauthorized access.
