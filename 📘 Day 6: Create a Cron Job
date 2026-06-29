@@ -1,0 +1,97 @@
+🧭 Project Overview
+
+In this exercise, we automate repetitive tasks in Linux using cron jobs. Cron is a time-based job scheduler in Unix-like systems that allows users to execute scripts or commands automatically at specified intervals.
+
+This is a core DevOps skill used for automation, system maintenance, monitoring, and scheduled deployments.
+
+🎯 Objective
+Understand cron scheduling syntax
+Create a scheduled cron job
+Verify cron job execution
+Manage and troubleshoot cron tasks
+Reinforce automation principles in Linux
+🧰 Environment
+Linux system (CentOS / Ubuntu lab environment)
+cronie / cron service installed
+sudo or user-level access
+📌 Concept Explanation
+
+Cron allows scheduling tasks using a time-based format:
+
+* * * * * command_to_execute
+│ │ │ │ │
+│ │ │ │ └── Day of week (0 - 7)
+│ │ │ └──── Month (1 - 12)
+│ │ └────── Day of month (1 - 31)
+│ └──────── Hour (0 - 23)
+└────────── Minute (0 - 59)
+🛠️ Implementation Steps
+1. Check if cron service is running
+sudo systemctl status cron
+
+or on CentOS/RHEL:
+
+sudo systemctl status crond
+2. Start cron service if required
+sudo systemctl start cron
+sudo systemctl enable cron
+3. Open crontab editor
+crontab -e
+4. Add a cron job
+Example: Run a script every 5 minutes
+*/5 * * * * /home/user/script.sh
+🔍 Explanation
+*/5  → every 5 minutes
+*    → every hour
+*    → every day of month
+*    → every month
+*    → every day of week
+5. Verify cron jobs
+crontab -l
+🔍 Expected Output
+*/5 * * * * /home/user/script.sh
+6. Confirm execution
+
+Check system logs:
+
+Ubuntu/Debian:
+grep CRON /var/log/syslog
+CentOS/RHEL:
+grep CRON /var/log/cron
+🔐 Security Insight
+
+Cron jobs are powerful because they run automatically without user interaction.
+
+This introduces both convenience and risk:
+
+Risks:
+Unauthorized scheduled tasks
+Hidden malicious scripts
+Privilege escalation via cron
+DevOps Best Practices:
+Restrict cron access using /etc/cron.allow
+Avoid running cron jobs as root unless necessary
+Use absolute paths in scripts
+Log and monitor cron executions
+🏗️ Real-World Use Cases
+Scenario	Description
+Backups	Nightly database or file backups
+Monitoring	Health checks and alerts
+Log rotation	Automated cleanup of logs
+Deployments	Scheduled application updates
+Data processing	ETL jobs and batch processing
+⚠️ Common Mistakes
+❌ Using incorrect cron syntax
+❌ Forgetting absolute paths in scripts
+❌ Not checking cron service status
+❌ Missing execute permissions on scripts
+❌ Not logging output for debugging
+📚 Key Takeaways
+Cron is a core Linux automation tool
+It uses a time-based scheduling system
+Essential for DevOps automation workflows
+Proper logging and security controls are important
+Widely used in production environments
+🚀 Summary
+
+In this exercise, we created and managed scheduled tasks using cron jobs. This introduced automation fundamentals in Linux, enabling tasks to run without manual intervention. Cron is a foundational tool in DevOps for ensuring reliability, consistency, and efficiency in system operations.
