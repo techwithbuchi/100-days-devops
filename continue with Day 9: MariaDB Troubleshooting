@@ -1,0 +1,105 @@
+🧭 Project Overview
+
+In this exercise, we focus on troubleshooting MariaDB database service issues in a Linux environment. Database availability is critical in production systems, and DevOps engineers are often responsible for diagnosing and restoring database services quickly.
+
+This task builds core skills in service management, log analysis, and Linux troubleshooting workflows.
+
+🎯 Objective
+Check MariaDB service status
+Identify and troubleshoot service failures
+Restart and restore database service
+Analyze logs for root cause detection
+Reinforce incident response skills in DevOps
+🧰 Environment
+Linux server (CentOS / Ubuntu lab environment)
+MariaDB installed
+sudo/root privileges required
+systemd service manager
+📌 Concept Explanation
+
+MariaDB is an open-source relational database used widely in web applications.
+
+Common system service name:
+mariadb
+
+or sometimes:
+
+mysql
+Why troubleshooting matters in DevOps:
+
+Databases are critical infrastructure components. If they fail:
+
+Applications go down
+APIs stop responding
+User experience is affected
+Business operations may halt
+🛠️ Implementation Steps
+1. Check MariaDB service status
+sudo systemctl status mariadb
+🔍 Possible outputs:
+✅ Running:
+Active: active (running)
+❌ Failed:
+Active: failed
+2. Start or restart MariaDB service
+Start service:
+sudo systemctl start mariadb
+Restart service:
+sudo systemctl restart mariadb
+3. Enable service at boot
+sudo systemctl enable mariadb
+4. Check logs for errors
+System logs:
+journalctl -u mariadb
+MariaDB-specific logs (common path):
+/var/log/mariadb/mariadb.log
+
+or
+
+/var/log/mysql/error.log
+5. Common troubleshooting checks
+Check disk space:
+df -h
+Check port availability (default 3306):
+ss -tlnp | grep 3306
+Check configuration file:
+/etc/my.cnf
+
+or
+
+/etc/mysql/mariadb.conf.d/
+🔐 Security Insight
+
+Database services require strict protection because they store:
+
+User data
+Application credentials
+Business-critical information
+DevOps best practices:
+Restrict DB access to localhost or private network
+Use strong authentication credentials
+Avoid exposing port 3306 publicly
+Regularly monitor logs for anomalies
+Enable backups and replication
+🏗️ Real-World Use Cases
+Scenario	Description
+Web applications	Backend database for apps
+E-commerce systems	Transaction storage
+Monitoring systems	Metrics and logs storage
+Enterprise systems	Business data processing
+CI/CD pipelines	Test database environments
+⚠️ Common Mistakes
+❌ Not checking service logs before restarting
+❌ Assuming restart fixes root cause
+❌ Ignoring disk space issues
+❌ Misconfigured database config files
+❌ Running DB as root user unnecessarily
+📚 Key Takeaways
+MariaDB is a critical backend service in many applications
+Troubleshooting starts with systemctl status
+Logs are essential for diagnosing failures
+Port and configuration issues are common root causes
+DevOps engineers must ensure database availability and stability
+🚀 Summary
+
+In this exercise, we diagnosed and resolved MariaDB service issues by checking system status, analyzing logs, and restarting services. This reinforced essential DevOps troubleshooting skills required for maintaining database reliability in production environments.
