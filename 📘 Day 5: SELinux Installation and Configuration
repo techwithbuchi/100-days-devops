@@ -1,0 +1,107 @@
+🧭 Project Overview
+
+In this exercise, we explore SELinux (Security-Enhanced Linux), a mandatory access control (MAC) system that adds an additional layer of security on Linux systems.
+
+Unlike traditional Linux permissions, SELinux enforces strict security policies that control how processes interact with files, ports, and services, even if file permissions allow access.
+
+This makes SELinux a critical component in enterprise-grade Linux security and DevOps hardening practices.
+
+🎯 Objective
+Understand SELinux concepts and modes
+Install and verify SELinux status
+Configure SELinux enforcement levels
+Test system behavior under SELinux policies
+Reinforce Linux security hardening principles
+🧰 Environment
+Linux OS (CentOS / RHEL preferred in enterprise setups)
+Root or sudo privileges
+SELinux-enabled kernel support
+📌 Concept Explanation
+
+SELinux adds a security layer on top of standard Linux permissions.
+
+Traditional Linux permissions:
+User / Group / Others → rwx
+SELinux adds:
+Policies controlling WHAT a process can do
+🔐 SELinux Modes
+
+SELinux operates in three main modes:
+
+Mode	Description
+Enforcing	SELinux actively blocks unauthorized actions
+Permissive	SELinux logs violations but does not block
+Disabled	SELinux is turned off
+🛠️ Implementation Steps
+1. Check SELinux status
+sestatus
+🔍 Expected Output
+SELinux status:                 enabled
+Current mode:                   enforcing
+2. Install SELinux packages (if not installed)
+sudo yum install -y selinux-policy selinux-policy-targeted
+
+On most enterprise systems, SELinux is pre-installed.
+
+3. Check current configuration file
+cat /etc/selinux/config
+🔍 Example Output
+SELINUX=enforcing
+SELINUXTYPE=targeted
+4. Modify SELinux mode (if required)
+
+Edit configuration:
+
+sudo vi /etc/selinux/config
+Available options:
+SELINUX=enforcing
+SELINUX=permissive
+SELINUX=disabled
+⚠️ Important Note
+Changes require system reboot
+Misconfiguration can block services unexpectedly
+5. Temporarily change SELinux mode (without reboot)
+Set to enforcing:
+sudo setenforce 1
+Set to permissive:
+sudo setenforce 0
+Verify:
+getenforce
+🔐 Security Insight
+
+SELinux is critical in production environments because it:
+
+Prevents unauthorized process interactions
+Restricts service-to-file access
+Limits damage from compromised applications
+Enforces strict security policies beyond file permissions
+Example:
+
+Even if a file has:
+
+-rwxrwxrwx
+
+SELinux can still block access if policy denies it.
+
+🏗️ Real-World Use Cases
+Scenario	Role of SELinux
+Web servers	Restricts Apache/Nginx file access
+Database servers	Limits DB process file exposure
+Multi-tenant systems	Isolates applications
+Government systems	Mandatory compliance requirement
+Enterprise Linux	Default security layer
+⚠️ Common Mistakes
+❌ Disabling SELinux permanently without justification
+❌ Ignoring SELinux denial logs
+❌ Misconfiguring policies and breaking services
+❌ Assuming Linux permissions alone are enough
+❌ Not checking SELinux when troubleshooting access issues
+📚 Key Takeaways
+SELinux adds mandatory access control (MAC) on top of Linux permissions
+It improves system security significantly in production environments
+Modes: enforcing, permissive, disabled
+It is a core component of enterprise Linux hardening
+DevOps engineers must know how to troubleshoot SELinux issues
+🚀 Summary
+
+In this exercise, we installed and configured SELinux, learned how it enforces strict security policies, and understood its role in protecting Linux systems from unauthorized access and misconfigurations. SELinux is a foundational security layer in enterprise DevOps environments.
