@@ -1,0 +1,118 @@
+🧭 Project Overview
+
+In this exercise, we configure and secure SSH authentication using key-based access. SSH (Secure Shell) is the primary protocol used for remote server access in Linux environments.
+
+Instead of using passwords, we implement public key authentication, which is more secure and widely used in DevOps and production systems.
+
+🎯 Objective
+Understand SSH authentication mechanisms
+Configure key-based authentication
+Disable password-based login (optional hardening)
+Verify secure remote access
+Reinforce secure DevOps access practices
+🧰 Environment
+Linux server (CentOS / Ubuntu lab environment)
+SSH service (sshd)
+Client + server setup (jump host + app server)
+sudo/root privileges
+📌 Concept Explanation
+
+SSH supports two main authentication methods:
+
+1. Password Authentication
+username + password
+Less secure
+Vulnerable to brute-force attacks
+2. Key-Based Authentication (Recommended)
+Private Key (Client) ↔ Public Key (Server)
+Strong cryptographic authentication
+No password required
+Industry standard for DevOps and cloud systems
+🔐 How SSH Key Authentication Works
+Client generates key pair
+        ↓
+Public key copied to server (~/.ssh/authorized_keys)
+        ↓
+Client connects using private key
+        ↓
+Server verifies identity without password
+🛠️ Implementation Steps
+1. Generate SSH key pair (on client / jump host)
+ssh-keygen -t rsa -b 4096
+🔍 Explanation
+-t rsa → RSA encryption algorithm
+-b 4096 → strong 4096-bit key
+Generates:
+Private key: id_rsa
+Public key: id_rsa.pub
+2. Copy public key to target server
+ssh-copy-id user@server-ip
+Alternative manual method:
+cat ~/.ssh/id_rsa.pub
+
+Then paste into:
+
+~/.ssh/authorized_keys
+
+on the target server.
+
+3. Set correct permissions
+
+On the server:
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+🔐 Why this matters:
+
+SSH is strict about permissions:
+
+.ssh directory must be private
+authorized_keys must not be publicly writable
+4. Test SSH login
+ssh user@server-ip
+
+Expected result:
+
+Login occurs without password prompt
+5. (Optional Hardening) Disable password authentication
+
+Edit SSH config:
+
+sudo vi /etc/ssh/sshd_config
+Update settings:
+PasswordAuthentication no
+PermitRootLogin no
+
+Restart SSH:
+
+sudo systemctl restart sshd
+🔐 Security Insight
+
+Key-based authentication improves security by:
+
+Eliminating password brute-force attacks
+Enabling secure automation (CI/CD pipelines)
+Supporting cloud-native infrastructure access
+Providing stronger cryptographic identity verification
+🏗️ Real-World Use Cases
+Scenario	Usage
+AWS EC2 access	SSH key pairs instead of passwords
+CI/CD pipelines	Jenkins/GitHub Actions SSH deployment
+Server automation	Ansible remote execution
+Kubernetes nodes	Secure cluster communication
+Production systems	Password authentication disabled
+⚠️ Common Mistakes
+❌ Incorrect file permissions on .ssh
+❌ Forgetting to restart SSH service
+❌ Using weak SSH keys (less than 2048-bit)
+❌ Losing private key access
+❌ Locking out root user accidentally
+📚 Key Takeaways
+SSH is the primary remote access tool in DevOps
+Key-based authentication is the industry standard
+Security depends heavily on correct file permissions
+Password authentication should be avoided in production
+SSH is foundational for automation and cloud operations
+🚀 Summary
+
+In this exercise, we configured SSH key-based authentication to securely access Linux servers without passwords. This improves security, enables automation, and is a core requirement in modern DevOps and cloud environments.
