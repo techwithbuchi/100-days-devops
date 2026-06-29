@@ -1,0 +1,103 @@
+🧭 Project Overview
+
+In this exercise, we install and configure Ansible, a powerful open-source automation tool used for configuration management, application deployment, and infrastructure orchestration.
+
+Ansible is widely used in DevOps because it enables agentless automation over SSH, making server management scalable and efficient.
+
+🎯 Objective
+Understand Ansible architecture
+Install Ansible on a control node
+Verify installation
+Understand inventory and basic usage
+Reinforce automation fundamentals in DevOps
+🧰 Environment
+Linux control node (CentOS / Ubuntu)
+SSH access to managed nodes
+sudo/root privileges required
+Python installed (dependency for Ansible)
+📌 Concept Explanation
+
+Ansible works on a simple architecture:
+
+Control Node (Ansible installed)
+        ↓ SSH
+Managed Nodes (Target servers)
+Key Features:
+Agentless (no software installed on target servers)
+Uses SSH for communication
+Uses YAML for configuration (playbooks)
+Idempotent (safe to run multiple times)
+🛠️ Implementation Steps
+1. Update system packages
+sudo apt update -y
+
+or
+
+sudo yum update -y
+2. Install Ansible
+Ubuntu / Debian:
+sudo apt install ansible -y
+CentOS / RHEL:
+
+Enable EPEL repository first:
+
+sudo yum install epel-release -y
+
+Then install Ansible:
+
+sudo yum install ansible -y
+3. Verify installation
+ansible --version
+🔍 Expected Output
+ansible [core 2.x.x]
+4. Understand Ansible inventory
+
+Default inventory file:
+
+/etc/ansible/hosts
+Example inventory:
+[webservers]
+192.168.1.10
+192.168.1.11
+
+[dbservers]
+192.168.1.20
+5. Test Ansible connectivity
+ansible all -m ping
+🔍 Expected Output
+192.168.1.10 | SUCCESS => {"ping": "pong"}
+🔐 Security Insight
+
+Ansible is powerful because it:
+
+Uses SSH (no agents required)
+Executes commands remotely
+Requires secure key-based authentication
+Can modify entire infrastructure at scale
+Security best practices:
+Use SSH keys (not passwords)
+Limit inventory access
+Use Ansible Vault for secrets
+Restrict sudo privileges carefully
+🏗️ Real-World Use Cases
+Scenario	Description
+Configuration management	Standardize server setups
+Application deployment	Deploy apps across multiple servers
+Patch management	Update systems at scale
+Infrastructure provisioning	Post-Terraform configuration
+CI/CD automation	Integrate with Jenkins pipelines
+⚠️ Common Mistakes
+❌ Not configuring SSH key access
+❌ Misconfigured inventory file
+❌ Running Ansible without privilege escalation
+❌ Forgetting Python dependency on target nodes
+❌ Using root unnecessarily in playbooks
+📚 Key Takeaways
+Ansible is a configuration management tool
+It is agentless and SSH-based
+Uses YAML playbooks for automation
+Scales infrastructure management efficiently
+Core tool in modern DevOps pipelines
+🚀 Summary
+
+In this exercise, we installed and verified Ansible, a key DevOps automation tool used for managing infrastructure at scale. This marks a major step toward automation-driven system administration, enabling consistent and repeatable server configuration across environments.
