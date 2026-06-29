@@ -1,0 +1,122 @@
+🧭 Project Overview
+
+In this exercise, we install and configure Apache Tomcat, a widely used Java application server used to deploy and run Java-based web applications.
+
+This task demonstrates how DevOps engineers manage application server setup, configuration, and deployment of WAR files in a Linux environment.
+
+🎯 Objective
+Install Apache Tomcat on a Linux server
+Configure Tomcat to run on a custom port
+Deploy a Java web application (.war file)
+Validate application accessibility via HTTP
+Reinforce application deployment workflows
+🧰 Environment
+Linux server (CentOS / Ubuntu lab environment)
+Java Runtime Environment (JRE)
+Apache Tomcat
+Root/sudo privileges required
+Network access to port 8084
+📌 Concept Explanation
+
+Apache Tomcat is a lightweight Java application server used to run Java web applications such as:
+
+Servlets
+JSP applications
+WAR-based deployments
+Spring-based legacy apps
+Default behavior:
+Runs on port: 8080
+Deploys applications from: webapps/
+Supports .war files (Web Application Archive)
+🛠️ Implementation Steps
+1. Install Tomcat
+Ubuntu/Debian:
+sudo apt update -y
+sudo apt install tomcat9 -y
+CentOS/RHEL:
+sudo yum install tomcat -y
+2. Start and enable Tomcat service
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
+3. Verify Tomcat is running
+sudo systemctl status tomcat
+4. Configure Tomcat port (Change from 8080 → 8084)
+
+Edit configuration file:
+
+sudo vi /etc/tomcat/server.xml
+Modify connector:
+<Connector port="8080" protocol="HTTP/1.1"
+
+Change to:
+
+<Connector port="8084" protocol="HTTP/1.1"
+5. Restart Tomcat
+sudo systemctl restart tomcat
+6. Deploy ROOT.war application
+
+Copy WAR file into webapps directory:
+
+sudo cp /tmp/ROOT.war /var/lib/tomcat/webapps/
+🔍 Important Concept
+ROOT.war means application is deployed at base URL:
+http://server-ip:8084/
+
+Instead of:
+
+http://server-ip:8084/app-name
+7. Verify deployment
+
+Check Tomcat logs:
+
+tail -f /var/log/tomcat/catalina.out
+8. Test application access
+curl http://stapp01:8084
+🔍 Expected Output
+HTML response from deployed application
+No connection errors
+Status code 200 OK
+🔐 Security Insight
+
+Tomcat is a critical application layer component and must be secured properly:
+
+Best practices:
+Run Tomcat as a non-root user
+Restrict access to management console
+Change default ports in production
+Use firewall rules (allow only required ports)
+Deploy only trusted WAR files
+Monitor logs for suspicious activity
+🏗️ Real-World Use Cases
+Scenario	Description
+Enterprise applications	Banking and insurance systems
+Legacy Java apps	WAR-based deployments
+Internal business tools	HR, payroll systems
+API hosting	Java-based backend services
+Dev/Test environments	Application staging servers
+⚠️ Common Mistakes
+❌ Forgetting to restart Tomcat after config change
+❌ Incorrect WAR placement directory
+❌ Misconfigured port (conflict with other services)
+❌ Not checking logs when deployment fails
+❌ Missing Java installation dependency
+📚 Key Takeaways
+Tomcat is a core Java application server in enterprise environments
+Applications are deployed as .war files
+Configuration changes require service restart
+Logs are essential for troubleshooting deployments
+Port configuration is a key DevOps responsibility
+🚀 Summary
+
+In this exercise, we installed and configured Apache Tomcat, changed its default port, and deployed a Java web application using a WAR file. This introduced real-world application deployment concepts used in enterprise DevOps environments.
+
+🎉 End of Day 11 Milestone
+
+At this stage, you now understand:
+
+Linux system administration
+Security hardening (SSH, SELinux)
+Automation (Bash, Cron, Ansible)
+Database troubleshooting (MariaDB)
+Application deployment (Tomcat)
+Infrastructure mindset (ready for Terraform → cloud scaling)
