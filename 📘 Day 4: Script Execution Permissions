@@ -1,0 +1,108 @@
+🧭 Project Overview
+
+In this exercise, we focus on managing Linux file permissions, specifically granting or restricting execution rights on shell scripts.
+
+This is a fundamental DevOps skill used to control how scripts are executed, who can execute them, and under what conditions. Proper permission management ensures system security, operational safety, and controlled automation execution.
+
+🎯 Objective
+Understand Linux file permission model
+Modify script execution permissions
+Make a script executable
+Verify execution behavior
+Reinforce secure file access principles
+🧰 Environment
+Linux server (CentOS / Ubuntu lab environment)
+Bash shell
+Root or sudo privileges required
+📌 Concept Explanation
+
+Linux uses a three-tier permission model:
+
+User (Owner)
+Group
+Others
+
+Each file has three permission types:
+
+r → read
+w → write
+x → execute
+Why execution permission matters in DevOps:
+
+Scripts are widely used for:
+
+Automation tasks
+Deployment pipelines
+System maintenance
+Backup operations
+Monitoring jobs
+
+Without proper permissions, scripts cannot run.
+
+🛠️ Implementation Steps
+1. Check existing file permissions
+ls -l script.sh
+🔍 Example Output
+-rw-r--r-- 1 root root  120 Apr 10 10:00 script.sh
+Interpretation:
+No x (execute permission)
+Script cannot be run directly
+2. Add execute permission
+Method 1: Using symbolic mode
+chmod +x script.sh
+Method 2: Using numeric mode
+chmod 755 script.sh
+🔍 Permission breakdown (755):
+7 = rwx (owner)
+5 = r-x (group)
+5 = r-x (others)
+3. Verify updated permissions
+ls -l script.sh
+
+Expected output:
+
+-rwxr-xr-x 1 root root 120 Apr 10 10:00 script.sh
+4. Execute the script
+./script.sh
+🔍 Alternative execution method
+
+If not executable:
+
+bash script.sh
+🔐 Security Insight
+
+Execution permissions control who can run scripts and programs.
+
+In production systems:
+
+Not all scripts should be executable by everyone
+Only trusted users should have execution rights
+Critical automation scripts must be protected
+Example secure permission model:
+File Type	Recommended Permission
+System scripts	750
+User scripts	700
+Shared automation scripts	755
+Sensitive scripts	700 or restricted
+🏗️ Real-World Use Cases
+Scenario	Description
+Deployment scripts	Only CI/CD user can execute
+Backup scripts	Restricted to admin group
+Monitoring scripts	Executed by cron/system users
+Security scripts	Locked to root only
+Application startup scripts	Controlled by systemd
+⚠️ Common Mistakes
+❌ Forgetting to add execute permission (chmod +x)
+❌ Using overly permissive settings like 777
+❌ Running scripts without reviewing contents
+❌ Executing scripts as root unnecessarily
+❌ Mixing up read/write/execute roles
+📚 Key Takeaways
+Linux permissions control file security and execution
+chmod is a core DevOps tool for system control
+Execution rights are required to run scripts directly
+Proper permission design reduces security risks
+Automation depends heavily on correct file permissions
+🚀 Summary
+
+In this exercise, we learned how to manage script execution permissions in Linux by using chmod. We ensured that scripts are executable only when explicitly allowed, reinforcing secure and controlled automation practices used in real-world DevOps environments.
