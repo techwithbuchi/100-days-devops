@@ -1,0 +1,171 @@
+📌 Project Overview
+
+Today's lab focused on troubleshooting a Linux network service that had become inaccessible over a custom TCP port. 
+Although the Apache HTTP service was configured to use the correct port and appeared to be running, remote clients were unable to establish a connection.
+
+The objective was to identify the root cause using Linux networking and system administration tools, restore service accessibility, and verify connectivity from a 
+remote jump host while preserving the server's security posture.
+
+Objectives
+Diagnose why an Apache web service was unreachable on a custom port.
+Verify Apache service status and configuration.
+Confirm the web server was listening on the expected port.
+Test network connectivity between hosts.
+Investigate Linux firewall rules.
+Restore secure access to the application.
+Validate connectivity using curl.
+Environment
+Component	Description
+Operating System	Linux
+Web Server	Apache (httpd)
+Client	Jump Host
+Target Server	App Server 1 (stapp01)
+Apache Port	6400
+Problem Statement
+
+The monitoring system reported that the Apache web service on App Server 1 was unreachable via port 6400.
+
+Although the service itself might have been down, the issue could also have originated from networking, firewall rules, or server configuration.
+
+Expected verification:
+
+curl http://stapp01:6400
+Troubleshooting Process
+1. Verify Apache Service Status
+
+Checked whether the Apache service was running.
+
+sudo systemctl status httpd
+
+Initially, Apache failed to start due to an Address already in use error.
+
+2. Identify Port Conflicts
+
+Verified which processes were listening on network ports.
+
+sudo ss -tulpn
+
+After correcting the Apache configuration, the service successfully listened on:
+
+*:6400
+3. Verify Apache Configuration
+
+Confirmed Apache was configured to listen on the required port.
+
+grep -R "^Listen" /etc/httpd/conf/httpd.conf
+
+Output:
+
+Listen 6400
+4. Test Local Connectivity
+
+Verified the service responded locally.
+
+curl http://localhost:6400
+
+The page loaded successfully, confirming Apache itself was functioning correctly.
+
+5. Test Remote Connectivity
+
+From the Jump Host:
+
+curl http://stapp01:6400
+
+Received:
+
+curl: (7) Failed to connect
+No route to host
+
+This indicated the request never reached Apache and suggested a networking or firewall issue.
+
+6. Inspect Firewall Rules
+
+Since firewalld was not installed, I inspected the active iptables rules.
+
+sudo iptables -L -n
+
+Discovered the INPUT chain contained:
+
+REJECT all -- anywhere anywhere reject-with icmp-host-prohibited
+
+No rule existed permitting inbound traffic on TCP port 6400.
+
+7. Allow Access to Port 6400
+
+Inserted an ACCEPT rule before the REJECT rule.
+
+sudo iptables -I INPUT 5 -p tcp --dport 6400 -j ACCEPT
+
+Verified the rule:
+
+sudo iptables -L -n
+8. Validate the Fix
+
+From the Jump Host:
+
+curl http://stapp01:6400
+
+The Apache webpage was successfully returned, confirming the issue had been resolved.
+
+Key Commands Used
+sudo systemctl status httpd
+
+sudo systemctl start httpd
+
+sudo ss -tulpn
+
+grep -R "^Listen" /etc/httpd/conf/httpd.conf
+
+curl http://localhost:6400
+
+curl http://stapp01:6400
+
+sudo iptables -L -n
+
+sudo iptables -I INPUT 5 -p tcp --dport 6400 -j ACCEPT
+Root Cause Analysis
+
+The Apache service was correctly configured and actively listening on port 6400.
+
+However, the Linux firewall (iptables) denied all incoming traffic that did not explicitly match an ACCEPT rule.
+
+Since no rule existed for TCP port 6400, every connection attempt was rejected before reaching the Apache service.
+
+Adding an ACCEPT rule for port 6400 restored remote access while maintaining the existing firewall policy.
+
+Skills Practiced
+Linux service management
+Apache troubleshooting
+Network diagnostics
+TCP port verification
+ss and socket inspection
+Client/server connectivity testing
+Linux firewall management
+iptables rule inspection
+Remote service validation
+Systematic troubleshooting methodology
+Key Takeaways
+A running service does not always mean it is reachable.
+The error message "No route to host" can indicate firewall rules blocking traffic, not only routing issues.
+Always verify each layer of troubleshooting:
+Service status
+Service configuration
+Listening ports
+Local connectivity
+Remote connectivity
+Firewall policies
+Linux firewall rules are processed in order, making rule placement critical.
+A structured troubleshooting process helps identify root causes efficiently without making unnecessary configuration changes.
+Outcome
+
+✅ Apache service restored successfully.
+
+✅ Remote connectivity verified from the Jump Host.
+
+✅ Network access secured by allowing only the required service port.
+
+💡 Reflection
+
+This lab reinforced an important DevOps principle: effective troubleshooting starts with narrowing down the problem layer by layer. Although the initial symptoms suggested an Apache issue, 
+the real cause was an iptables rule rejecting inbound traffic. By validating the service, configuration, listening ports, and finally the firewall, I was able to resolve the issue without 
+compromising the server's security. This exercise strengthened my confidence in diagnosing Linux network service problems using a methodical, evidence-driven approach.
