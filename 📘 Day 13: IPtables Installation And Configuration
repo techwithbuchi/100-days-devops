@@ -1,0 +1,266 @@
+# Day 13 - Securing Linux Network Services with iptables
+
+## Project Overview
+
+On Day 13 of my **#100DaysOfDevOps** challenge, I learned how to secure backend Linux servers using **iptables**, the native firewall framework in Linux. This lab was built directly
+on the previous day's troubleshooting exercise by moving from identifying firewall issues to implementing firewall policies that protect production services.
+
+In this project, I configured firewall rules to restrict access to an Apache web service running on port **6000**, ensuring that only the **Load Balancer (LBR)** 
+could communicate with the application servers while blocking all other incoming traffic.
+
+---
+
+## Project Objectives
+
+The requirements for this lab were:
+
+* Install **iptables** and its required services on all application servers.
+* Allow only the **Load Balancer** to access Apache on port **6000**.
+* Block access to port **6000** from every other source.
+* Ensure firewall rules persist after system reboot.
+
+---
+
+# Why This Matters
+
+In a production environment, backend application servers should never be directly exposed to users or the internet.
+
+Instead, requests should follow this architecture:
+
+```text
+                Internet
+                    │
+            Load Balancer (LBR)
+                    │
+        ┌───────────┼───────────┐
+        │           │           │
+    App Server1  App Server2  App Server3
+```
+
+The Load Balancer becomes the only entry point into the application infrastructure.
+
+This approach provides several benefits:
+
+* Reduces the attack surface
+* Prevents direct access to backend servers
+* Centralizes traffic management
+* Improves security and scalability
+* Aligns with the Principle of Least Privilege
+
+---
+
+# Technologies Used
+
+* Linux
+* Apache HTTP Server
+* iptables
+* iptables-services
+* Bash
+* SSH
+
+---
+
+# Implementation Steps
+
+## 1. Installed iptables Services
+
+The firewall service was installed on each application server.
+
+```bash
+sudo yum install -y iptables-services
+```
+
+The `iptables-services` package allows firewall rules to be saved and automatically restored after system reboot.
+
+---
+
+## 2. Identified the Load Balancer IP Address
+
+Before creating firewall rules, I identified the trusted Load Balancer IP address.
+
+```bash
+cat /etc/hosts
+```
+
+This IP was used as the only trusted source allowed to communicate with the application servers on port **6000**.
+
+---
+
+## 3. Allowed Traffic from the Load Balancer
+
+A rule was inserted at the top of the firewall chain to allow incoming TCP traffic on port **6000** from the Load Balancer.
+
+```bash
+sudo iptables -I INPUT \
+-s <LBR_IP> \
+-p tcp \
+--dport 6000 \
+-j ACCEPT
+```
+
+Using `-I` inserts the rule at the beginning of the chain, ensuring it is evaluated before any blocking rules.
+
+---
+
+## 4. Blocked All Other Incoming Traffic
+
+After allowing the trusted host, a second rule was appended to drop all remaining traffic destined for port **6000**.
+
+```bash
+sudo iptables -A INPUT \
+-p tcp \
+--dport 6000 \
+-j DROP
+```
+
+This ensures that only requests originating from the Load Balancer are accepted.
+
+---
+
+## 5. Verified Firewall Rules
+
+Firewall rules were reviewed to confirm they were applied in the correct order.
+
+```bash
+sudo iptables -L INPUT -n --line-numbers
+```
+
+Expected rule order:
+
+```text
+1 ACCEPT tcp -- LBR_IP --> Port 6000
+
+2 DROP   tcp -- Anywhere --> Port 6000
+```
+
+Rule order is critical because **iptables evaluates rules sequentially and stops processing once a match is found**.
+
+---
+
+## 6. Saved Firewall Configuration
+
+To ensure firewall rules survive a reboot, they were saved and the iptables service was enabled.
+
+```bash
+sudo service iptables save
+
+sudo systemctl enable iptables
+
+sudo systemctl start iptables
+```
+
+Without saving the configuration, firewall rules would be lost after restarting the server.
+
+---
+
+# Key Linux Commands
+
+```bash
+sudo yum install -y iptables-services
+
+cat /etc/hosts
+
+sudo iptables -I INPUT -s <LBR_IP> -p tcp --dport 6000 -j ACCEPT
+
+sudo iptables -A INPUT -p tcp --dport 6000 -j DROP
+
+sudo iptables -L INPUT -n --line-numbers
+
+sudo service iptables save
+
+sudo systemctl enable iptables
+
+sudo systemctl start iptables
+```
+
+---
+
+# Key Concepts Learned
+
+This project strengthened my understanding of:
+
+* Linux host-based firewalls
+* Packet filtering with iptables
+* INPUT chain processing
+* TCP port filtering
+* Rule ordering in firewall configurations
+* Persistent firewall configuration
+* Network security best practices
+* Restricting backend services to trusted hosts
+* Principle of Least Privilege
+* Production infrastructure security
+
+---
+
+# Challenges Faced
+
+One of the biggest lessons from this lab was understanding that **firewall rule order is just as important as the rules themselves**.
+
+If the "DROP" rule is placed before the "ACCEPT" rule, the Load Balancer would also be blocked because iptables processes rules from top to bottom and stops at the first match.
+
+Another important lesson was realizing that firewall rules are stored in memory unless explicitly saved. Enabling the `iptables` service ensures that security policies remain intact even after a system reboot.
+
+---
+
+# Real-World Application
+
+This mirrors how production environments secure backend infrastructure.
+
+Rather than exposing application servers directly to users, organizations place them behind reverse proxies or load balancers such as:
+
+* AWS Application Load Balancer (ALB)
+* NGINX
+* HAProxy
+* Traefik
+
+Only these trusted components are permitted to communicate with backend servers, significantly reducing the attack surface and improving overall security.
+
+---
+
+# Outcome
+
+By completing this lab, I successfully:
+
+* Installed and configured iptables on multiple Linux servers.
+* Restricted access to Apache on port **6000**.
+* Allowed communication only from the trusted Load Balancer.
+* Persisted firewall rules across system reboots.
+* Gained hands-on experience implementing host-level security controls commonly used in enterprise Linux environments.
+
+---
+
+## Skills Gained
+
+* Linux System Administration
+* Network Security
+* iptables Firewall Management
+* Service Hardening
+* Infrastructure Security
+* Production Troubleshooting
+* DevOps Operations
+* Bash & Linux CLI
+
+---
+
+## Repository Structure
+
+```text
+day-13-linux-firewall-security/
+│
+├── README.md
+├── screenshots/
+│   ├── iptables-installed.png
+│   ├── firewall-rules.png
+│   ├── hosts-file.png
+│   ├── rules-saved.png
+│   └── verification.png
+└── notes.md
+```
+
+---
+
+## Reflection
+
+Day 13 demonstrated that securing a service is just as important as deploying it. Yesterday's troubleshooting exercise showed how firewalls can unintentionally block applications; today's lab focused on using that same firewall intentionally to enforce security policies.
+
+I now have a practical understanding of how Linux firewalls fit into a production architecture, why backend services should only accept traffic from trusted infrastructure like load balancers, and how to create firewall rules that remain effective even after a system reboot. This project reinforced that DevOps engineers are responsible not only for keeping services available, but also for ensuring they are securely exposed.
