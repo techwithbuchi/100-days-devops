@@ -1,0 +1,208 @@
+# Day 14 – Linux Services Troubleshooting: Apache Service Recovery
+
+## 📌 Project Overview
+
+On Day 14 of my **#100DaysOfDevOps** challenge, I worked on a real-world Linux troubleshooting scenario involving the Apache HTTP Server. 
+A monitoring system detected that the Apache service was unavailable on one of the application servers within a multi-server infrastructure.
+
+The objective was to identify the faulty server, restore the Apache service, and ensure that all application servers were consistently configured to listen on **port 3004**.
+
+---
+
+## 🎯 Objectives
+
+* Identify the application server with the failed Apache service.
+* Diagnose the root cause of the failure.
+* Restore the Apache service.
+* Configure Apache to listen on port **3004**.
+* Verify that Apache is active and running on every application server.
+
+---
+
+## 🏗️ Environment
+
+* Linux Application Servers (stapp01, stapp02, stapp03)
+* Apache HTTP Server (httpd)
+* SSH for remote administration
+* Systemd service management
+
+---
+
+## 🔍 Problem Statement
+
+The production monitoring system reported that Apache was unavailable on one of the application servers.
+
+Requirements:
+
+* Apache must be running on all application servers.
+* Apache must listen on **port 3004**.
+* No web application deployment was required; only service availability needed to be restored.
+
+---
+
+## 🛠️ Troubleshooting Process
+
+### 1. Connected to Each Application Server
+
+SSH was used to access every application server individually.
+
+```bash
+ssh tony@stapp01
+ssh tony@stapp02
+ssh tony@stapp03
+```
+
+---
+
+### 2. Verified Apache Service Status
+
+Checked the status of the Apache service to identify the unhealthy server.
+
+```bash
+sudo systemctl status httpd
+```
+
+This immediately revealed which server had the failed service.
+
+---
+
+### 3. Investigated the Failure
+
+Reviewed the service status and system logs to determine why Apache failed to start.
+
+```bash
+sudo journalctl -xeu httpd
+```
+
+Service logs are one of the most valuable resources during Linux troubleshooting because they provide the exact reason a service failed.
+
+---
+
+### 4. Validated Apache Configuration
+
+Before restarting the service, the Apache configuration was validated.
+
+```bash
+sudo httpd -t
+```
+
+Expected output:
+
+```
+Syntax OK
+```
+
+Configuration validation helps prevent repeated service failures caused by syntax errors.
+
+---
+
+### 5. Verified Apache Listening Port
+
+Checked the Apache configuration file to ensure the service was configured to listen on the required port.
+
+```bash
+grep Listen /etc/httpd/conf/httpd.conf
+```
+
+Expected configuration:
+
+```
+Listen 3004
+```
+
+---
+
+### 6. Restarted Apache
+
+After resolving the issue, Apache was restarted.
+
+```bash
+sudo systemctl restart httpd
+```
+
+---
+
+### 7. Confirmed Service Health
+
+Verified that Apache was running successfully.
+
+```bash
+sudo systemctl status httpd
+```
+
+Expected result:
+
+```
+Active: active (running)
+```
+
+---
+
+### 8. Verified Listening Port
+
+Confirmed that Apache was bound to port **3004**.
+
+```bash
+sudo ss -tulnp | grep 3004
+```
+
+---
+
+## ✅ Outcome
+
+* Successfully identified the faulty application server.
+* Restored the Apache HTTP service.
+* Verified Apache configuration.
+* Ensured Apache was listening on port **3004**.
+* Confirmed the service was running successfully on all application servers.
+
+---
+
+## 💡 Key Takeaways
+
+This project reinforced that effective troubleshooting follows a structured process rather than trial and error. By validating service status, examining logs, testing configuration syntax, and confirming network bindings, I restored service availability while ensuring configuration consistency across multiple servers.
+
+These are the same diagnostic techniques used by DevOps and Site Reliability Engineers (SREs) when responding to production incidents.
+
+---
+
+## 🧠 Skills Practiced
+
+* Linux System Administration
+* Apache HTTP Server (httpd)
+* Systemd Service Management
+* Service Troubleshooting
+* Linux Log Analysis
+* Configuration Validation
+* Network Port Verification
+* Root Cause Analysis
+* Production Incident Response
+
+---
+
+## 🚀 Commands Used
+
+```bash
+ssh tony@stapp01
+ssh tony@stapp02
+ssh tony@stapp03
+
+sudo systemctl status httpd
+sudo journalctl -xeu httpd
+sudo httpd -t
+grep Listen /etc/httpd/conf/httpd.conf
+sudo systemctl restart httpd
+sudo ss -tulnp | grep 3004
+```
+
+---
+
+## 📚 Lessons Learned
+
+Production support is more than restarting failed services—it involves identifying the root cause, validating configurations before making changes, and verifying that systems return to a healthy state after remediation. Consistently following a structured troubleshooting methodology leads to faster incident resolution and more reliable infrastructure.
+
+---
+
+### 🔖 Hashtags
+
+#100DaysOfDevOps #Linux #Apache #SystemAdministration #DevOps #SRE #Troubleshooting #Monitoring #KodeKloud #Infrastructure #CloudEngineering #OpenSource #LearningInPublic
