@@ -1,0 +1,217 @@
+# Day 15 – Nginx Installation, SSL Configuration & Web Server Deployment
+
+## 📌 Project Overview
+
+On Day 15 of my **#100DaysOfDevOps** challenge, I worked on preparing a production-ready web server using **Nginx** on App Server 1 in a multi-server Stratos Datacenter environment.
+
+The task involved installing Nginx, configuring HTTPS using a self-signed SSL certificate, deploying a static webpage, and validating secure connectivity from a remote jump host.
+
+---
+
+## 🎯 Objectives
+
+* Install and configure Nginx on App Server 1
+* Deploy a self-signed SSL certificate
+* Configure Nginx to serve traffic over HTTPS (port 443)
+* Create a basic `index.html` file
+* Validate secure connectivity using `curl` from the jump host
+
+---
+
+## 🏗️ Environment
+
+* Linux-based application server (App Server 1)
+* Nginx Web Server
+* SSH access via jump host
+* Self-signed SSL certificate provided at `/tmp/nautilus.crt` and `/tmp/nautilus.key`
+
+---
+
+## 🔍 Problem Statement
+
+The application server needed to be prepared for deployment by:
+
+1. Installing Nginx
+2. Securing the server using SSL certificates
+3. Ensuring web content is served correctly
+4. Verifying HTTPS access from the jump host
+
+---
+
+## 🛠️ Implementation Steps
+
+### 1. Installed Nginx
+
+Installed the Nginx web server using the system package manager.
+
+```bash id="step1"
+sudo yum install -y nginx
+```
+
+Enabled and started the service:
+
+```bash id="step2"
+sudo systemctl enable nginx
+sudo systemctl start nginx
+```
+
+---
+
+### 2. Configured SSL Certificate
+
+Created a secure directory for SSL files:
+
+```bash id="step3"
+sudo mkdir -p /etc/nginx/ssl
+```
+
+Moved the provided certificate and key:
+
+```bash id="step4"
+sudo mv /tmp/nautilus.crt /etc/nginx/ssl/
+sudo mv /tmp/nautilus.key /etc/nginx/ssl/
+```
+
+---
+
+### 3. Configured Nginx for HTTPS
+
+Edited the Nginx configuration file to enable SSL on port 443.
+
+Key configuration:
+
+```nginx id="step5"
+server {
+    listen 443 ssl;
+    server_name stapp01;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    ssl_certificate /etc/nginx/ssl/nautilus.crt;
+    ssl_certificate_key /etc/nginx/ssl/nautilus.key;
+
+    include /etc/nginx/default.d/*.conf;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+```
+
+---
+
+### 4. Deployed Web Content
+
+Created a simple homepage:
+
+```bash id="step6"
+echo "Welcome!" | sudo tee /usr/share/nginx/html/index.html
+```
+
+---
+
+### 5. Validated Configuration
+
+Before restarting Nginx, the configuration syntax was verified:
+
+```bash id="step7"
+sudo nginx -t
+```
+
+Ensured output:
+
+```text id="step8"
+Syntax is ok
+The test is successful
+```
+
+---
+
+### 6. Restarted Nginx Service
+
+```bash id="step9"
+sudo systemctl restart nginx
+```
+
+---
+
+### 7. Verified Service Status
+
+Checked that Nginx was active and running:
+
+```bash id="step10"
+sudo systemctl status nginx
+```
+
+---
+
+### 8. Tested HTTPS Connectivity
+
+From the jump host, verified secure access:
+
+```bash id="step11"
+curl -Ik https://stapp01
+```
+
+Expected result:
+
+* HTTP 200 OK
+* SSL handshake successful (self-signed certificate accepted)
+
+---
+
+## ❗ Challenge Faced & Resolution
+
+### Issue: Nginx Configuration Error
+
+During setup, Nginx failed to start due to:
+
+> `"location directive is not allowed here"`
+
+### Root Cause:
+
+A `location` block was placed outside the `server` context in the Nginx configuration file.
+
+### Fix:
+
+* Corrected brace structure
+* Ensured all directives (`location`, `include`, `error_page`) were inside the `server` block
+* Validated configuration using `nginx -t` before restart
+
+---
+
+## 🧠 Key Learnings
+
+* Understanding Nginx configuration hierarchy (main → http → server → location)
+* Importance of SSL certificate placement and secure directory structure
+* Real-world debugging using `nginx -t` before service restart
+* How misplacing a single configuration block can break an entire service
+* Production-grade workflow: install → configure → validate → restart → test
+
+---
+
+## 🧰 Skills Practiced
+
+* Linux system administration
+* Nginx web server setup
+* SSL/TLS configuration (self-signed certificates)
+* Service management with systemd
+* Log-based troubleshooting
+* Configuration debugging
+* Secure web deployment
+
+---
+
+## 🚀 Final Outcome
+
+* Nginx successfully installed and running
+* HTTPS configured with a self-signed certificate
+* Web server serving “Welcome!” page
+* Remote verification via jump host completed successfully
+
+---
+
+## 🔖 Tags
+
+`#100DaysOfDevOps` `#Nginx` `#Linux` `#SSL` `#WebServer` `#DevOps` `#SystemAdministration` `#CloudEngineering`
