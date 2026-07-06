@@ -1,0 +1,126 @@
+🚀 Day 16: Install and Configure Nginx as a Load Balancer (LBR)
+📌 Project Overview
+
+In this lab, we configured an Nginx Load Balancer (LBR) to distribute incoming traffic across multiple backend 
+application servers in a high-availability setup within the Nautilus infrastructure.
+
+The goal was to improve performance, scalability, and fault tolerance as application traffic increased.
+
+🏗️ Architecture Design
+                Users
+                  │
+                  │  http://stlb01:80
+                  ▼
+        ┌─────────────────────┐
+        │   NGINX LBR (stlb01)│
+        └─────────────────────┘
+            │       │       │
+            ▼       ▼       ▼
+     stapp01    stapp02    stapp03
+     (Apache)   (Apache)   (Apache)
+        │          │          │
+     Port 3000  Port 3000  Port 3000
+
+🎯 Objectives
+Install Nginx on the Load Balancer server (stlb01)
+Configure Nginx as a reverse proxy load balancer
+Ensure traffic is distributed across multiple app servers
+Validate high availability setup using curl
+
+⚙️ Prerequisites
+All app servers (stapp01, stapp02, stapp03) are running Apache
+Apache is running on port 3000
+No changes should be made to Apache configuration
+SSH access to all servers
+
+🧪 Implementation Steps
+🟢 Step 1: Verify Apache on App Servers
+sudo systemctl status httpd
+sudo ss -tulnp | grep 3000
+
+Ensure Apache is active and listening on port 3000.
+
+🟢 Step 2: Install Nginx on Load Balancer
+sudo yum install nginx -y
+
+Enable and start service:
+
+sudo systemctl enable nginx
+sudo systemctl start nginx
+🟢 Step 3: Configure Nginx Load Balancer
+
+Edit main configuration file:
+
+sudo vi /etc/nginx/nginx.conf
+🟢 Step 4: Add Upstream Configuration
+
+Inside http {} block:
+
+upstream app_servers {
+    server stapp01:3000;
+    server stapp02:3000;
+    server stapp03:3000;
+}
+🟢 Step 5: Configure Proxy Server Block
+
+Replace or modify server {} block:
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://app_servers;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+🟢 Step 6: Validate Configuration
+sudo nginx -t
+
+Expected output:
+
+syntax is ok
+test is successful
+🟢 Step 7: Restart Nginx
+sudo systemctl restart nginx
+🟢 Step 8: Test Load Balancer
+
+Run multiple curl requests:
+
+curl http://stlb01:80
+curl http://stlb01:80
+curl http://stlb01:80
+
+You should see responses rotating between:
+
+stapp01
+stapp02
+stapp03
+
+🧠 Key Learnings
+Nginx can act as a reverse proxy + load balancer
+upstream defines backend server pool
+proxy_pass connects traffic to backend group
+Load balancing improves:
+Availability
+Performance
+Scalability
+
+⚠️ Common Mistakes
+Forgetting to add proxy_pass
+Using wrong backend port
+Editing wrong Nginx config file
+Not restarting Nginx after changes
+Assuming Apache runs on port 80
+
+📊 Outcome
+Successfully configured Nginx as a Load Balancer
+Traffic distributed across 3 backend servers
+Verified high availability setup using curl
+Completed Nautilus migration requirement
+🚀 Conclusion
+
+Day 16 introduced a critical production concept — load balancing using Nginx. 
+This setup forms the foundation of scalable and fault-tolerant web architectures used in modern DevOps environments.
