@@ -1,0 +1,184 @@
+# Day 17 - Install and Configure PostgreSQL
+
+## Overview
+
+As part of my **100 Days of DevOps** journey, today's task focused on provisioning a PostgreSQL database for a new application deployment.
+
+In most production environments, applications require a dedicated database and user account before deployment. Rather than connecting with the PostgreSQL superuser, 
+applications authenticate using a dedicated database user with only the permissions they need. This follows the **Principle of Least Privilege**, improving both security and maintainability.
+
+This lab simulated a common DevOps responsibility: preparing a PostgreSQL database server for an application team.
+
+---
+
+## Project Objective
+
+Configure an existing PostgreSQL server by:
+
+- Creating a new PostgreSQL database user
+- Assigning a secure password
+- Creating a new database
+- Granting the application user full access to the new database
+
+---
+
+## Lab Requirements
+
+- Create a PostgreSQL user named `kodekloud_joy`
+- Set the password to `ksH85UJjhb`
+- Create a database named `kodekloud_db4`
+- Grant all privileges on the database to `kodekloud_joy`
+- Do **not** restart the PostgreSQL service
+
+---
+
+## Environment
+
+- Platform: KodeKloud Engineer
+- Operating System: Linux
+- Database: PostgreSQL
+- User Management: PostgreSQL Roles
+
+---
+
+## Solution
+
+### 1. Switch to the PostgreSQL Administrator
+
+```bash
+sudo su - postgres
+```
+
+---
+
+### 2. Access PostgreSQL
+
+```bash
+psql
+```
+
+---
+
+### 3. Create the Application User
+
+```sql
+CREATE USER kodekloud_joy WITH PASSWORD 'ksH85UJjhb';
+```
+
+---
+
+### 4. Create the Database
+
+```sql
+CREATE DATABASE kodekloud_db4;
+```
+
+---
+
+### 5. Grant Permissions
+
+```sql
+GRANT ALL PRIVILEGES ON DATABASE kodekloud_db4 TO kodekloud_joy;
+```
+
+---
+
+### 6. Verify the Configuration
+
+List databases:
+
+```sql
+\l
+```
+
+List users:
+
+```sql
+\du
+```
+
+Exit PostgreSQL:
+
+```sql
+\q
+```
+
+---
+
+## PostgreSQL Concepts Learned
+
+### PostgreSQL Roles
+
+In PostgreSQL, users are implemented as roles with the `LOGIN` attribute. Instead of giving applications administrative access, dedicated roles are created with only the permissions they require.
+
+---
+
+### Database Ownership vs Privileges
+
+A database can be accessed by multiple users, but permissions determine what each user can do. Granting privileges allows secure collaboration without exposing administrative capabilities.
+
+---
+
+### Principle of Least Privilege
+
+Applications should never connect using the `postgres` superuser. Creating a dedicated application user limits the impact of compromised credentials and aligns with security best practices.
+
+---
+
+## Real-World DevOps Use Case
+
+Before deploying an application, infrastructure engineers typically:
+
+- Provision the database server
+- Create application-specific databases
+- Create dedicated database users
+- Assign secure credentials
+- Grant only the required permissions
+- Deliver the connection details to the application team
+
+This separation improves security, simplifies auditing, and reduces operational risk.
+
+---
+
+## Key Commands
+
+```bash
+sudo su - postgres
+psql
+
+CREATE USER kodekloud_joy WITH PASSWORD 'ksH85UJjhb';
+CREATE DATABASE kodekloud_db4;
+GRANT ALL PRIVILEGES ON DATABASE kodekloud_db4 TO kodekloud_joy;
+
+\du
+\l
+\q
+```
+
+---
+
+## Key Takeaways
+
+- Learned how PostgreSQL manages users through roles
+- Created a dedicated database user for an application
+- Provisioned a new PostgreSQL database
+- Assigned appropriate database permissions
+- Reinforced the Principle of Least Privilege
+- Gained practical experience with PostgreSQL administration tasks commonly performed by DevOps engineers
+
+---
+
+## Skills Practiced
+
+- PostgreSQL Administration
+- Database Provisioning
+- SQL Fundamentals
+- Linux System Administration
+- User and Permission Management
+- DevOps Infrastructure Operations
+
+---
+
+## Outcome
+
+Successfully provisioned a PostgreSQL database environment for a new application by creating a dedicated database, configuring an application user, and granting the required permissions without interrupting the running database service.
