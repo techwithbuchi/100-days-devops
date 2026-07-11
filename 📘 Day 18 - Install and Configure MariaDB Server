@@ -1,0 +1,238 @@
+# Day 18 - Install and Configure MariaDB Server
+
+## Overview
+
+On Day 18 of my **100 Days of DevOps** journey, I configured a complete MariaDB database server for a new application deployment. This exercise focused on installing the database service, creating a dedicated database, provisioning an application-specific user, and assigning the appropriate permissions.
+
+This lab demonstrates one of the core responsibilities of a DevOps Engineer—preparing backend infrastructure that applications depend on while following security best practices by avoiding the use of the database root account for application access.
+
+---
+
+## Project Scenario
+
+The Nautilus application team required a new MariaDB database environment for one of their applications. The infrastructure requirements included:
+
+* Install and configure MariaDB Server.
+* Create a new database named `kodekloud_db2`.
+* Create a database user named `kodekloud_aim`.
+* Assign the password `B4zNgHA7Ya`.
+* Grant the user full privileges on the newly created database.
+
+---
+
+## Objectives
+
+* Install MariaDB Server
+* Start and enable the MariaDB service
+* Create a new database
+* Create a dedicated database user
+* Grant database-specific permissions
+* Verify the database configuration
+
+---
+
+## Environment
+
+| Component  | Details              |
+| ---------- | -------------------- |
+| Platform   | KodeKloud Engineer   |
+| Datacenter | Stratos DC           |
+| Server     | DB Server (`stdb01`) |
+| Database   | MariaDB              |
+| OS         | Linux                |
+
+---
+
+## Architecture
+
+```text
+                    Application
+                         │
+                         │ Database Connection
+                         ▼
+              User: kodekloud_aim
+              Password: ***********
+                         │
+                         ▼
+               MariaDB Database Server
+                         │
+              Database: kodekloud_db2
+```
+
+---
+
+## Implementation Steps
+
+### 1. Install MariaDB
+
+```bash
+sudo yum install -y mariadb-server
+```
+
+---
+
+### 2. Start and Enable the Service
+
+```bash
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
+```
+
+Verify the service:
+
+```bash
+systemctl status mariadb
+```
+
+---
+
+### 3. Access MariaDB
+
+```bash
+mysql
+```
+
+---
+
+### 4. Create the Database
+
+```sql
+CREATE DATABASE kodekloud_db2;
+```
+
+---
+
+### 5. Create the Application User
+
+```sql
+CREATE USER 'kodekloud_aim'@'localhost'
+IDENTIFIED BY 'B4zNgHA7Ya';
+```
+
+---
+
+### 6. Grant Permissions
+
+```sql
+GRANT ALL PRIVILEGES
+ON kodekloud_db2.*
+TO 'kodekloud_aim'@'localhost';
+```
+
+---
+
+### 7. Reload Privileges
+
+```sql
+FLUSH PRIVILEGES;
+```
+
+---
+
+### 8. Verify Configuration
+
+View databases:
+
+```sql
+SHOW DATABASES;
+```
+
+View user permissions:
+
+```sql
+SHOW GRANTS FOR 'kodekloud_aim'@'localhost';
+```
+
+---
+
+## Verification Checklist
+
+* MariaDB installed successfully
+* MariaDB service running
+* Database `kodekloud_db2` created
+* User `kodekloud_aim` created
+* User granted full privileges
+* Configuration verified successfully
+
+---
+
+## Key DevOps Concepts Learned
+
+### Database Provisioning
+
+Applications require dedicated databases before deployment. Infrastructure teams provision these databases to isolate application data and simplify management.
+
+### Principle of Least Privilege
+
+Rather than allowing applications to use the database root account, a dedicated user should be created with permissions limited to the required database. This reduces security risks and prevents unintended access to other databases.
+
+### Service Management
+
+Using `systemctl` ensures that database services start automatically after system reboots, improving reliability and reducing manual intervention.
+
+### Database Security
+
+Separating databases by application and using dedicated credentials helps improve security, auditing, and operational maintenance.
+
+---
+
+## Real-World Use Case
+
+Imagine an e-commerce company launching a new Inventory Management application.
+
+Before developers can deploy the application, the DevOps team must:
+
+* Provision a database server
+* Create a dedicated application database
+* Generate secure database credentials
+* Grant only the permissions required for that application
+* Deliver the connection details to the development team
+
+This separation ensures multiple applications can safely share the same database server without interfering with one another.
+
+---
+
+## Commands Summary
+
+```bash
+sudo yum install -y mariadb-server
+
+sudo systemctl enable mariadb
+
+sudo systemctl start mariadb
+
+mysql
+
+CREATE DATABASE kodekloud_db2;
+
+CREATE USER 'kodekloud_aim'@'localhost'
+IDENTIFIED BY 'B4zNgHA7Ya';
+
+GRANT ALL PRIVILEGES
+ON kodekloud_db2.*
+TO 'kodekloud_aim'@'localhost';
+
+FLUSH PRIVILEGES;
+
+SHOW DATABASES;
+
+SHOW GRANTS FOR 'kodekloud_aim'@'localhost';
+```
+
+---
+
+## Key Takeaways
+
+* Installed and configured MariaDB Server.
+* Created a dedicated application database.
+* Implemented secure database authentication using a dedicated user.
+* Assigned database-specific privileges following DevOps best practices.
+* Gained hands-on experience with database provisioning, service management, and access control.
+
+---
+
+## Conclusion
+
+Day 18 strengthened my understanding of database administration from a DevOps perspective. While creating databases and users may appear straightforward, these tasks form the foundation of nearly every modern application deployment.
+
+Understanding how to securely provision databases, manage user permissions, and prepare backend services is an essential skill for every DevOps Engineer.
