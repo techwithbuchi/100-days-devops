@@ -1,0 +1,187 @@
+# Day 19 - Install and Configure Web Application using Apache
+
+## 📌 Project Overview
+
+On Day 19 of my **#100DaysOfDevOps** journey, I configured an Apache HTTP Server to host multiple static web applications on a single server.
+
+The objective was to prepare the infrastructure for two independent websites by installing Apache, configuring a custom listening port, 
+and deploying the applications under separate URL paths.
+
+This lab demonstrates how a single web server can efficiently host multiple applications, a common architecture used in enterprise environments.
+
+---
+
+## 🏗️ Architecture
+
+```
+                Client
+                   │
+                   │
+          http://localhost:5004
+                   │
+             Apache HTTP Server
+                   │
+        ┌──────────┴──────────┐
+        │                     │
+ /ecommerce/             /cluster/
+        │                     │
+ Static Website A      Static Website B
+```
+
+---
+
+## 🎯 Objectives
+
+- Install Apache HTTP Server (`httpd`)
+- Configure Apache to listen on a custom port (5004)
+- Deploy two static websites
+- Serve each application under its own URL path
+- Verify successful deployment using `curl`
+
+---
+
+## 🛠️ Technologies Used
+
+- Linux
+- Apache HTTP Server (httpd)
+- HTTP
+- Curl
+- Bash
+
+---
+
+## 📂 Project Requirements
+
+- Install Apache on App Server 2
+- Configure Apache to listen on port **5004**
+- Deploy the following applications:
+
+```
+/var/www/html/ecommerce
+/var/www/html/cluster
+```
+
+- Applications should be accessible via:
+
+```
+http://localhost:5004/ecommerce/
+http://localhost:5004/cluster/
+```
+
+---
+
+## ⚙️ Implementation Steps
+
+### 1. Install Apache
+
+```bash
+yum install -y httpd
+```
+
+---
+
+### 2. Configure Apache Port
+
+Edit:
+
+```bash
+/etc/httpd/conf/httpd.conf
+```
+
+Change:
+
+```apache
+Listen 80
+```
+
+to
+
+```apache
+Listen 5004
+```
+
+---
+
+### 3. Copy Website Files
+
+Transferred the application backups from the Jump Host and placed them inside Apache's document root.
+
+Example structure:
+
+```
+/var/www/html/
+├── ecommerce/
+└── cluster/
+```
+
+---
+
+### 4. Start Apache
+
+```bash
+systemctl enable httpd
+systemctl restart httpd
+```
+
+---
+
+### 5. Verify Deployment
+
+```bash
+curl http://localhost:5004/ecommerce/
+```
+
+```bash
+curl http://localhost:5004/cluster/
+```
+
+Both applications successfully returned their HTML content.
+
+---
+
+## ✅ Validation
+
+Verified:
+
+- Apache service running
+- Listening on port 5004
+- Both applications accessible
+- Correct directory structure
+- Successful HTTP responses using curl
+
+---
+
+## 💡 Key DevOps Learnings
+
+This project reinforced several important concepts:
+
+- Installing and configuring Apache HTTP Server
+- Hosting multiple applications on a single web server
+- Serving applications using URL path mapping
+- Configuring non-default service ports
+- Static website deployment
+- Infrastructure validation using curl
+- Understanding Apache's DocumentRoot structure
+
+---
+
+## 🌍 Real-World Application
+
+Many organizations host multiple internal applications on a single Apache or Nginx server.
+
+Examples include:
+
+- Internal Documentation Portal
+- HR Portal
+- Monitoring Dashboard
+- Company Wiki
+- Status Page
+
+Rather than provisioning a server for every application, multiple sites can be served efficiently using URL paths or virtual hosts.
+
+---
+
+## 🚀 Outcome
+
+Successfully configured Apache HTTP Server to host multiple static websites on a custom port, 
+demonstrating a practical approach to serving multiple applications from a single web server.
