@@ -1,0 +1,217 @@
+Day 20: Configure Nginx + PHP-FPM Using Unix Socket
+📌 Project Overview
+
+Modern PHP applications require a web server to handle incoming HTTP requests and an application runtime to execute PHP code. Rather than executing PHP directly, 
+Nginx delegates PHP processing to PHP-FPM (FastCGI Process Manager) using a Unix socket, which offers lower latency and improved security compared to TCP communication.
+
+In this project, I configured Nginx and PHP-FPM 8.3 on Nautilus App Server 2 to serve a PHP application through a Unix socket. The deployment included installing 
+ the required packages, configuring Nginx to listen on a custom port, enabling FastCGI communication, and validating the application from the jump host.
+
+🎯 Project Objective
+
+The goal of this lab was to:
+
+Install and configure Nginx on App Server 2.
+Configure Nginx to listen on port 8091.
+Set the document root to /var/www/html.
+Install PHP-FPM 8.3.
+Configure PHP-FPM to communicate through the Unix socket:
+/var/run/php-fpm/default.sock
+Integrate Nginx with PHP-FPM using FastCGI.
+Verify the PHP application is accessible from the jump host.
+
+🏗️ Architecture Overview
+
+                    Client (Jump Host)
+                            │
+                            │
+        curl http://stapp02:8091/index.php
+                            │
+                            ▼
+                  Nginx Web Server
+                    Listening :8091
+                            │
+                            │
+             FastCGI via Unix Socket
+                            │
+                            ▼
+      /var/run/php-fpm/default.sock
+                            │
+                            ▼
+                    PHP-FPM 8.3
+                            │
+                            ▼
+          /var/www/html/index.php
+                            │
+                            ▼
+                    HTML Response
+
+🛠️ Prerequisites
+
+Nautilus App Server 2
+Root or sudo privileges
+Nginx
+PHP-FPM 8.3
+Remi Repository (for PHP 8.3 packages)
+
+⚙️ Implementation Steps
+Step 1: Install the Remi Repository
+
+The default Enterprise Linux repositories did not provide PHP-FPM 8.3. To install the required version, I first enabled the Remi repository.
+
+dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm -y
+Step 2: Install Nginx
+dnf install nginx -y
+
+Verify installation:
+
+nginx -v
+Step 3: Install PHP-FPM 8.3
+dnf install php-fpm -y
+
+Verify the installed version:
+
+php-fpm -v
+Step 4: Configure PHP-FPM
+
+Created the socket directory:
+
+mkdir -p /var/run/php-fpm
+
+Edited:
+
+/etc/php-fpm.d/www.conf
+
+Updated the following settings:
+
+user = nginx
+group = nginx
+
+listen = /var/run/php-fpm/default.sock
+
+listen.owner = nginx
+listen.group = nginx
+listen.mode = 0660
+Step 5: Configure Nginx
+
+Edited the default virtual host configuration and configured:
+
+Listen on port 8091
+Document root as /var/www/html
+PHP processing through the Unix socket
+server {
+
+    listen 8091;
+
+    server_name _;
+
+    root /var/www/html;
+
+    index index.php index.html;
+
+    location ~ \.php$ {
+
+        fastcgi_pass unix:/var/run/php-fpm/default.sock;
+
+        fastcgi_index index.php;
+
+        include fastcgi_params;
+
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+    }
+
+}
+Step 6: Validate Configuration
+
+Validate PHP-FPM configuration:
+
+php-fpm -t
+
+Validate Nginx configuration:
+
+nginx -t
+Step 7: Enable and Start Services
+systemctl enable nginx --now
+systemctl enable php-fpm --now
+
+systemctl restart nginx
+systemctl restart php-fpm
+Step 8: Verify the Unix Socket
+ls -l /var/run/php-fpm/
+
+Expected output:
+
+default.sock
+Step 9: Test the Application
+
+From the jump host:
+
+curl http://stapp02:8091/index.php
+
+The command successfully returned the PHP application, confirming that Nginx and PHP-FPM were communicating correctly through the Unix socket.
+
+✅ Validation Checklist
+✔️ Nginx installed successfully
+✔️ Nginx listening on port 8091
+✔️ Document root configured as /var/www/html
+✔️ PHP-FPM 8.3 installed successfully
+✔️ Unix socket created successfully
+✔️ Nginx communicating with PHP-FPM
+✔️ PHP application accessible from the jump host
+🚨 Troubleshooting
+PHP-FPM Failed to Start
+
+Validated the configuration using:
+
+php-fpm -t
+
+This quickly identified configuration errors before restarting the service.
+
+Nginx Configuration Errors
+
+Validated the configuration using:
+
+nginx -t
+
+This helped identify syntax errors before reloading Nginx.
+
+PHP Version Requirement
+
+The lab specifically required PHP-FPM 8.3.
+
+Since the default repositories provided an older version, the Remi repository was added to install the required PHP release.
+
+Unix Socket Verification
+
+Verified that the socket was created after PHP-FPM started successfully:
+
+ls -l /var/run/php-fpm/
+💡 Key Learnings
+Learned how Nginx delegates PHP execution to PHP-FPM.
+Understood the role of FastCGI in processing PHP requests.
+Configured PHP-FPM to communicate using a Unix socket instead of a TCP port.
+Learned how repository management affects package availability on Enterprise Linux.
+Reinforced the importance of validating service configurations before restarting production services.
+🌍 Production Relevance
+
+This deployment architecture is widely used in production environments because it offers improved performance and security.
+
+Common use cases include:
+
+WordPress hosting
+Laravel applications
+CodeIgniter deployments
+Magento and other e-commerce platforms
+Internal enterprise PHP applications
+
+Using Unix sockets instead of TCP reduces communication overhead while limiting PHP-FPM access to local processes only.
+
+🎯 Conclusion
+
+This project demonstrated how to deploy a production-style PHP application using Nginx and PHP-FPM 8.3 with Unix socket communication. The exercise reinforced key Linux administration concepts, web server configuration, package management, and service integration—skills that are directly applicable to real-world DevOps and infrastructure engineering roles.
+
+🏷️ Repository Tags
+
+#100DaysOfDevOps #KodeKloud #Nginx #PHPFPM #FastCGI #Linux #DevOps #SystemAdministration #WebServer #OpenSource
+
