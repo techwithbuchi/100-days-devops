@@ -1,0 +1,129 @@
+# Day 21 - Set Up Git Repository on Storage Server | 100 Days of DevOps
+
+## 📌 Project Overview
+
+On Day 21 of my **100 Days of DevOps** journey, I learned how to set up a centralized Git repository by installing Git on a Linux server and 
+creating a **bare Git repository**.
+
+This lab demonstrates how organizations host internal Git repositories that serve as the central source of truth for developers and CI/CD systems.
+
+---
+
+## 🛠️ Technologies Used
+
+* Linux (RHEL/CentOS)
+* Git
+* YUM Package Manager
+
+---
+
+## 📖 Lab Objectives
+
+* Install Git using YUM.
+* Create a bare Git repository.
+* Store the repository in `/opt/demo.git`.
+
+---
+
+## 🏗️ Implementation Steps
+
+### 1. Install Git
+
+```bash
+sudo yum install -y git
+```
+
+Verify the installation:
+
+```bash
+git --version
+```
+
+---
+
+### 2. Create a Bare Repository
+
+```bash
+git init --bare /opt/demo.git
+```
+
+Expected output:
+
+```text
+Initialized empty Git repository in /opt/demo.git/
+```
+
+---
+
+### 3. Verify the Repository
+
+```bash
+ls -la /opt/demo.git
+```
+
+Example output:
+
+```text
+HEAD
+branches
+config
+description
+hooks
+info
+objects
+refs
+```
+
+---
+
+## 📚 Understanding Bare Repositories
+
+A **bare repository** contains only Git metadata and does not have a working directory.
+
+Unlike a standard Git repository, developers cannot edit files directly inside a bare repository. Instead, they clone it, 
+make changes locally, and push commits back to the central repository.
+
+This design prevents accidental modifications on the server while enabling multiple developers to collaborate safely.
+
+---
+
+## 🌍 Real-World DevOps Use Case
+
+In production environments, teams rarely push code directly to application servers.
+
+Instead, developers push their code to a centralized Git repository hosted on platforms like GitHub, GitLab, Bitbucket, Azure DevOps, or an internal Git server.
+
+The CI/CD pipeline then pulls code from this repository to build, test, and deploy applications automatically.
+
+Typical workflow:
+
+Developer → Git Repository → CI/CD Pipeline → Production Environment
+
+---
+
+## 💡 Key Takeaways
+
+* Learned how to install Git on a Linux server.
+* Understood the purpose of a bare Git repository.
+* Learned why centralized repositories are essential for collaborative software development.
+* Connected Git repositories to modern CI/CD workflows.
+* Reinforced Linux package management using YUM.
+
+---
+
+## 🎯 Skills Practiced
+
+* Git Administration
+* Linux System Administration
+* Repository Management
+* Version Control Fundamentals
+* DevOps Foundations
+* YUM Package Management
+
+---
+
+## ✅ Lab Status
+
+**Completed Successfully ✔️**
+
+Day 21 of #100DaysOfDevOps completed.
