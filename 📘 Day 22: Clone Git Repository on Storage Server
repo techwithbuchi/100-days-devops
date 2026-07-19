@@ -1,0 +1,138 @@
+
+📌 Task
+
+The DevOps team previously created a bare Git repository on the Storage Server. The application development team now requires a working copy of that repository for development.
+
+Objective
+Clone the existing Git repository located at /opt/blog.git
+Clone it into /usr/src/kodekloudrepos
+Perform the operation as the Natasha user
+Do not modify repository permissions or existing directories
+🏗️ Architecture
+                    Storage Server
+
+             Bare Repository (Remote)
+                 /opt/blog.git
+                        │
+                        │ git clone
+                        ▼
+      Working Repository (Developer Copy)
+     /usr/src/kodekloudrepos/blog
+                        │
+                        ▼
+              Natasha's Local Workspace
+
+⚙️ Steps Performed
+
+1. Switched to the required user
+su - natasha
+2. Navigated to the destination directory
+cd /usr/src/kodekloudrepos
+3. Cloned the repository
+git clone /opt/blog.git
+4. Verified the clone
+ls -l /usr/src/kodekloudrepos
+
+Output
+
+blog
+
+Verify Git repository
+
+cd blog
+git status
+✅ Result
+
+Successfully cloned the existing Git repository into the required location while:
+
+Using the correct user (natasha)
+Preserving repository integrity
+Making no unauthorized permission or directory changes
+💡 Key Concepts Learned
+What is a Bare Repository?
+
+A bare repository contains only the Git version history and metadata.
+
+It has:
+
+No working directory
+No checked-out files
+Used as a central repository for collaboration
+
+Example:
+
+/opt/blog.git
+What is a Working Repository?
+
+A cloned repository contains:
+
+Project files
+Working directory
+Git history
+Local branches
+
+Developers edit files here before committing and pushing changes.
+
+Example:
+
+/usr/src/kodekloudrepos/blog
+Why Clone Instead of Copy?
+
+Using Git Clone:
+
+Preserves commit history
+Configures remote origin automatically
+Maintains Git metadata
+Enables collaboration
+
+Copying files manually would lose all Git tracking information.
+
+Real-World DevOps Scenario
+
+Imagine your company hosts a central Git repository on an internal Git server.
+
+Git Server
+│
+├── payment-api.git
+├── frontend.git
+├── inventory.git
+└── blog.git
+
+When a new developer joins the team, they don't receive a ZIP file of the project.
+
+Instead, they run:
+
+git clone git@company.com:blog.git
+
+This creates their own working copy while the central repository remains untouched.
+
+This is exactly what happened in today's lab.
+
+Commands Used
+su - natasha
+
+cd /usr/src/kodekloudrepos
+
+git clone /opt/blog.git
+
+cd blog
+
+git status
+Lessons Learned
+Difference between bare and working repositories
+How Git clone creates a complete working copy
+Why developers never work directly inside a bare repository
+Importance of user permissions in collaborative environments
+Best practices for maintaining repository integrity
+🎯 Day 22 Complete!
+
+Another step closer to becoming a DevOps Engineer.
+
+Topics covered today:
+
+Git
+Bare Repository
+Working Repository
+Git Clone
+Repository Management
+Linux User Permissions
