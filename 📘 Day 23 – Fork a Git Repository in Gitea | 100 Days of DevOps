@@ -1,0 +1,131 @@
+
+## 📌 Project Overview
+
+Today’s KodeKloud DevOps challenge focused on one of the most common collaboration workflows in Git—**forking a repository**.
+
+Forking creates a personal copy of another user's repository under your own account. This allows developers to experiment, develop features independently, 
+and contribute back to the original project through Pull Requests without affecting the source repository.
+
+In this lab, I logged into a self-hosted **Gitea** Git server as a newly onboarded developer and forked an existing project into my own workspace.
+
+---
+
+## 🎯 Objective
+
+Complete the following tasks:
+
+- Log into the Gitea server
+- Locate the repository owned by another developer
+- Fork the repository into my own account
+- Verify successful creation of the fork
+
+---
+
+## 🏗️ Lab Environment
+
+| Component | Details |
+|-----------|---------|
+| Platform | KodeKloud Engineer |
+| Git Server | Gitea |
+| User | jon |
+| Source Repository | sarah/story-blog |
+| Fork Destination | jon/story-blog |
+
+---
+
+## ⚙️ Steps Performed
+
+### 1. Accessed the Gitea Web Interface
+
+Opened the Gitea UI from the KodeKloud Engineer environment.
+
+---
+
+### 2. Logged into Gitea
+
+Authenticated using:
+
+```text
+Username: jon
+Password: Jon_pass123
+```
+
+---
+
+### 3. Located the Repository
+
+Searched for the repository:
+
+```text
+sarah/story-blog
+```
+
+---
+
+### 4. Forked the Repository
+
+Selected the **Fork** option and created a personal copy under the **jon** account.
+
+The repository was successfully created as:
+
+```text
+jon/story-blog
+```
+
+---
+
+## ✅ Verification
+
+Verified that:
+
+- Login was successful
+- Repository existed under Sarah's account
+- Fork operation completed successfully
+- New repository appeared under Jon's account
+
+---
+
+## 💡 Key Concepts Learned
+
+- What a Git fork is
+- Difference between cloning and forking
+- How distributed version control enables collaborative development
+- Using Gitea as a self-hosted Git platform
+- Safe contribution workflow using personal forks
+
+---
+
+## 🧠 Why Fork Instead of Clone?
+
+| Fork | Clone |
+|------|-------|
+| Creates a copy on the Git server | Creates a copy on your local machine |
+| Used for collaboration | Used for development |
+| Enables Pull Requests | Doesn't create a remote repository |
+| Maintains relationship with original repository | Independent local copy |
+
+---
+
+## 🚀 Skills Practiced
+
+- Git Collaboration
+- Repository Management
+- Gitea Navigation
+- Open Source Workflow
+- Version Control Fundamentals
+
+---
+
+## 📚 Key Takeaways
+
+Forking is a fundamental Git workflow used across nearly every open-source project. By working from a personal fork, developers can safely implement changes, test new ideas, and submit contributions without directly modifying the original repository.
+
+This lab reinforced how Git platforms like Gitea simplify collaborative software development.
+
+---
+
+## 🏁 Challenge Status
+
+✅ Day 23 Completed Successfully
+
+**#100DaysOfDevOps**
