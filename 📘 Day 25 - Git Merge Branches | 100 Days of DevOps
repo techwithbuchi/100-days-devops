@@ -1,0 +1,113 @@
+# Day 25 - Git Merge Branches | 100 Days of DevOps
+
+## 📌 Project Overview
+
+Today's lab focused on one of Git's most important collaborative workflows: **branching and merging**.
+
+Instead of making changes directly on the `master` branch, I created a feature branch, added new content, committed the changes, 
+merged the branch back into `master`, and pushed both branches to the remote repository.
+
+This workflow mirrors how software teams safely develop and release new features in production environments.
+
+---
+
+## 🛠️ Technologies Used
+
+- Git
+- Linux
+- Git Branching
+- Git Merge
+- Git Commit
+- Git Remote (Origin)
+
+---
+
+## 📂 Lab Requirements
+
+- Create a new branch named **datacenter** from `master`
+- Copy `/tmp/index.html` into the repository
+- Stage and commit the file
+- Merge the `datacenter` branch into `master`
+- Push both `master` and `datacenter` branches to the remote repository
+
+---
+
+## ⚙️ Commands Used
+
+```bash
+cd /usr/src/kodekloudrepos/beta
+
+git checkout -b datacenter
+
+cp /tmp/index.html .
+
+git add index.html
+
+git commit -m "Add datacenter index page"
+
+git checkout master
+
+git merge datacenter
+
+git push origin master
+
+git push origin datacenter
+```
+
+---
+
+## 🏗️ Workflow
+
+```
+master
+   │
+   ├───────────────┐
+   │               │
+   ▼               │
+datacenter         │
+   │               │
+Add index.html     │
+Commit Changes     │
+   │               │
+   └──────Merge────┘
+           │
+           ▼
+        master
+           │
+     Push to Origin
+```
+
+---
+
+## 💡 Key Learnings
+
+- Create feature branches from the main branch
+- Keep production code isolated while developing
+- Stage and commit changes correctly
+- Merge branches using Git
+- Push multiple branches to a remote repository
+- Understand the standard Git Feature Branch Workflow used in professional DevOps teams
+
+---
+
+## 🌍 Real-World Relevance
+
+Feature branches are used by nearly every software engineering team.
+
+Instead of committing directly to production, developers create isolated branches for new features, bug fixes, or experiments. 
+Once reviewed and tested, those changes are merged into the main branch and deployed.
+
+This workflow enables safer collaboration, easier code reviews, and reduced deployment risks.
+
+---
+
+## ✅ Outcome
+
+Successfully completed the Git Merge Branches lab by:
+
+- Creating the `datacenter` branch
+- Adding and committing `index.html`
+- Merging changes into `master`
+- Pushing both branches to the remote repository
+
+Day 25 of the #100DaysOfDevOps challenge completed successfully! 🚀
