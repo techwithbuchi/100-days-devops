@@ -1,0 +1,78 @@
+📌 Challenge
+
+Today's task focused on managing multiple Git remotes within an existing repository.
+
+The development team introduced a new remote repository for the project, requiring the local repository to be updated with an additional remote. After configuring the new remote, a new project file needed to be committed and pushed to the new destination.
+
+🛠️ Objectives
+Add a new Git remote (dev_news)
+Point the remote to a different repository
+Copy a new file into the repository
+Stage and commit the changes
+Push the master branch to the new remote
+📂 Repository Structure
+Storage Server
+│
+├── Existing Remote
+│      /opt/news.git
+│
+├── New Remote
+│      /opt/xfusioncorp_news.git
+│
+└── Local Repository
+       /usr/src/kodekloudrepos/news
+🔧 Commands Used
+cd /usr/src/kodekloudrepos/news
+
+git remote add dev_news /opt/xfusioncorp_news.git
+
+cp /tmp/index.html .
+
+git add index.html
+
+git commit -m "Add index.html"
+
+git push dev_news master
+✅ Verification
+
+Verify the configured remotes:
+
+git remote -v
+
+Expected output:
+
+origin      /opt/news.git
+dev_news    /opt/xfusioncorp_news.git
+
+Verify the latest commit:
+
+git log --oneline -1
+🧠 Key Concepts Learned
+Git repositories can have multiple remotes.
+A remote is simply another repository your local project can communicate with.
+Developers can push the same codebase to multiple repositories.
+git remote add allows additional destinations without affecting the existing origin.
+Git separates local commits from remote repositories, giving developers flexibility over where changes are pushed.
+🌍 Real-World DevOps Scenario
+
+Organizations often maintain multiple Git remotes for different purposes:
+
+Internal development repository
+Customer-facing repository
+Backup repository
+Migration repository
+Open-source mirror
+
+Instead of cloning the project multiple times, engineers configure additional remotes and selectively push changes where needed.
+
+🎯 Skills Practiced
+Git Remote Management
+Repository Configuration
+Git Commit Workflow
+Version Control Best Practices
+Multi-Remote Collaboration
+📚 What I Learned
+
+This lab reinforced that Git is not limited to a single remote repository. Understanding how to manage multiple remotes is an essential DevOps skill, especially during repository migrations, enterprise collaborations, and disaster recovery strategies.
+
+#100DaysOfDevOps #Git #DevOps #VersionControl #Linux #KodeKloud #CloudEngineering #AWS #LearningInPublic
