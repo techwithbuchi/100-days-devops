@@ -1,0 +1,120 @@
+# Day 27 - Git Revert Some Changes
+
+## 📌 Project Overview
+
+Today's lab focused on safely undoing changes in a Git repository using **Git Revert**.
+
+Unlike `git reset`, which rewrites Git history, `git revert` creates a new commit that reverses the changes introduced by a previous commit. This makes it the preferred approach when working with shared repositories in collaborative development environments.
+
+---
+
+## 🏗️ Lab Scenario
+
+The Nautilus application development team identified an issue in the latest commit pushed to the `media` repository.
+
+As part of the DevOps team's responsibilities, the task was to revert the latest commit (`HEAD`) back to the previous stable commit while preserving the repository history.
+
+Repository:
+
+```bash
+/usr/src/kodekloudrepos/media
+```
+
+Required revert commit message:
+
+```text
+revert media
+```
+
+---
+
+## ⚙️ Technologies Used
+
+- Git
+- Linux
+- Bash
+
+---
+
+## 🚀 Implementation Steps
+
+Navigate to the repository:
+
+```bash
+cd /usr/src/kodekloudrepos/media
+```
+
+Review commit history:
+
+```bash
+git log --oneline
+```
+
+Revert the latest commit without committing immediately:
+
+```bash
+git revert HEAD -n
+```
+
+Create the required revert commit:
+
+```bash
+git commit -m "revert media"
+```
+
+Verify the updated commit history:
+
+```bash
+git log --oneline
+```
+
+---
+
+## 💡 Key Concepts Learned
+
+- Difference between `git revert` and `git reset`
+- Safe rollback strategies for shared repositories
+- Preserving Git history
+- Creating custom revert commit messages
+- Best practices for collaborative Git workflows
+
+---
+
+## 🌍 Real-World DevOps Relevance
+
+Production deployments occasionally introduce bugs or regressions.
+
+Rather than deleting commit history using `git reset`, DevOps teams typically use `git revert` to safely undo problematic changes while maintaining a complete audit trail.
+
+This approach enables:
+
+- Safe rollbacks
+- Transparent collaboration
+- CI/CD compatibility
+- Easier troubleshooting
+- Compliance and auditing
+
+---
+
+## 🎯 Outcome
+
+Successfully reverted the latest commit while preserving repository history and created a new revert commit with the required message:
+
+```text
+revert media
+```
+
+---
+
+## 📚 Key Takeaways
+
+- Never rewrite shared Git history unless absolutely necessary.
+- Use `git revert` for production-safe rollbacks.
+- Preserve commit history for auditing and collaboration.
+- Every rollback should itself become part of the project's history.
+
+---
+
+## 🏷️ Tags
+
+#Git #GitRevert #VersionControl #DevOps #Linux #KodeKloud #100DaysOfDevOps #CloudEngineering #OpenSource #GitOps
