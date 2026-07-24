@@ -1,0 +1,208 @@
+
+## 📌 Project Overview
+
+Today's lab focused on one of Git's most powerful features: **Cherry-Pick**.
+
+Unlike merging an entire branch, Git Cherry-Pick allows developers to copy a **single commit** from one branch into another. This is especially useful when only one specific change is ready for production while the remaining work is still under development.
+
+In this lab, the development team had two branches:
+
+- master
+- feature
+
+A developer working on the **feature** branch needed only one commit (`Update info.txt`) merged into **master**, without merging the unfinished feature branch.
+
+---
+
+## 🎯 Objectives
+
+- Navigate Git branches
+- Identify a specific commit by commit message
+- Cherry-pick a commit into another branch
+- Push the updated master branch to the remote repository
+
+---
+
+## 🏗️ Lab Scenario
+
+Repository:
+
+```
+/usr/src/kodekloudrepos/cluster
+```
+
+Branches:
+
+```
+master
+feature
+```
+
+Required commit:
+
+```
+Update info.txt
+```
+
+Task:
+
+- Find the commit
+- Cherry-pick it into master
+- Push master to origin
+
+---
+
+## ⚙️ Commands Used
+
+```bash
+cd /usr/src/kodekloudrepos/cluster
+
+git branch
+
+git log feature --oneline
+
+git checkout master
+
+git cherry-pick <commit_hash>
+
+git push origin master
+```
+
+---
+
+## 🔍 Explanation
+
+### View Feature Branch Commits
+
+```bash
+git log feature --oneline
+```
+
+Lists commits on the feature branch.
+
+---
+
+### Checkout Master
+
+```bash
+git checkout master
+```
+
+Switches to the target branch.
+
+---
+
+### Cherry-Pick
+
+```bash
+git cherry-pick <commit_hash>
+```
+
+Copies only the selected commit onto the current branch.
+
+Unlike `git merge`, this does **not** bring over every commit from the feature branch.
+
+---
+
+### Push Changes
+
+```bash
+git push origin master
+```
+
+Uploads the new commit to the remote repository.
+
+---
+
+# 💡 Real-World Use Cases
+
+Cherry-pick is commonly used for:
+
+- Hotfixes
+- Bug fixes
+- Documentation updates
+- Emergency production patches
+- Backporting fixes to older releases
+- Applying one configuration change without merging unfinished features
+
+Example:
+
+A developer creates 12 commits while building a payment gateway.
+
+Production urgently needs only one README update.
+
+Instead of merging all 12 commits, DevOps cherry-picks the documentation commit into production.
+
+---
+
+# 🔄 Git Workflow
+
+```
+master
+
+A ---- B
+
+feature
+
+A ---- B ---- C ---- D ---- E
+
+             ▲
+      Update info.txt
+```
+
+After Cherry-Pick
+
+```
+master
+
+A ---- B ---- C'
+
+feature
+
+A ---- B ---- C ---- D ---- E
+```
+
+Notice:
+
+- C and C' contain the same changes.
+- C' is a brand-new commit with a different commit hash.
+
+---
+
+# 🧠 Key Takeaways
+
+- Cherry-Pick copies a single commit.
+- Merge combines an entire branch.
+- Cherry-Pick is ideal for production hotfixes.
+- Helps keep unfinished work isolated.
+- Frequently used in enterprise Git workflows.
+
+---
+
+## ✅ Lab Outcome
+
+Successfully:
+
+- Located the required commit
+- Cherry-picked it into master
+- Pushed the updated master branch
+- Preserved unfinished work on the feature branch
+
+---
+
+## 🚀 Skills Gained
+
+- Git Branch Management
+- Git Cherry-Pick
+- Commit History Analysis
+- Production Hotfix Workflow
+- Selective Code Promotion
+- DevOps Version Control Best Practices
+
+---
+
+## 📅 Challenge
+
+**#100DaysOfDevOps — Day 28**
+
+Every lab is another step toward becoming a stronger DevOps Engineer through hands-on practice.
